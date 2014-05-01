@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ExecCabocha {
 	public static ArrayList<String> exec(String sentence) throws IOException, InterruptedException{ 
+		sentence = "\"" + sentence + "\"";
+		
 		List<String> list = new ArrayList<String>();
 		list.add("/bin/bash");
 		list.add("-c");
