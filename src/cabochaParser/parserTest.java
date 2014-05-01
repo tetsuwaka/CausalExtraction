@@ -6,13 +6,13 @@ import cabochaParser.CabochaParser.POS;
 public class parserTest {
 
 	public static void main(String[] args) {
-		String test = "* 0 1D 0/1 0.000000\n¡“ú\t–¼Œ,•›Œ‰Â”\,*,*,*,*,¡“ú,ƒLƒ‡ƒE,ƒLƒ‡[\n‚Í\t•Œ,ŒW•Œ,*,*,*,*,‚Í,ƒn,ƒ\n* 1 -1D 0/0 0.000000\n°‚ê\t–¼Œ,ˆê”Ê,*,*,*,*,°‚ê,ƒnƒŒ,ƒnƒŒ\nEOS";
+		String test = "* 0 1D 0/1 0.000000\nä»Šæ—¥\tåè©,å‰¯è©å¯èƒ½,*,*,*,*,ä»Šæ—¥,ã‚­ãƒ§ã‚¦,ã‚­ãƒ§ãƒ¼\nã¯\tåŠ©è©,ä¿‚åŠ©è©,*,*,*,*,ã¯,ãƒ,ãƒ¯\n* 1 -1D 0/0 0.000000\næ™´ã‚Œ\tåè©,ä¸€èˆ¬,*,*,*,*,æ™´ã‚Œ,ãƒãƒ¬,ãƒãƒ¬\nEOS";
 		CabochaParser parser = new CabochaParser(test);
 		ArrayList<POS> results = parser.parse();
 		for (POS pos : results) {
 			System.out.println(pos.str);
 		}
-		System.out.println("I—¹");
+		System.out.println("çµ‚äº†");
 	}
 
 }
