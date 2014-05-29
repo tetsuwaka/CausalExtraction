@@ -3,15 +3,11 @@ package cabochaParser;
 import java.util.ArrayList;
 
 public class CabochaParser {
-	public String cabochaResult;
-	private ArrayList<POS> cabochaList = new ArrayList<POS>(); 
 	
-	public CabochaParser(String mecabResult) {
-		this.cabochaResult = mecabResult;
-	}
-	
-	ArrayList<POS> parse() {
-		String lines[] = this.cabochaResult.split("\n");
+	ArrayList<POS> parse(String cabochaResult) {
+		ArrayList<POS> cabochaList = new ArrayList<POS>(); 
+		
+		String lines[] = cabochaResult.split("\n");
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i].trim();
 			if (line.startsWith("EOS")) {
@@ -26,23 +22,23 @@ public class CabochaParser {
 					pos.id = Integer.parseInt(items[1]);
 					pos.chunk = Integer.parseInt(items[2]);
 				}
-				this.cabochaList.add(pos);
+				cabochaList.add(pos);
 			} else if (line.equals("")) {
 			} else {
 				String tempList[] = line.split("\t");
 				String items[] = tempList[1].split(",");
 				Morph morph = new Morph();
-				POS pos = this.cabochaList.get(this.cabochaList.size() - 1);
+				POS pos = cabochaList.get(cabochaList.size() - 1);
 				pos.str.add(tempList[0]);
 				morph.face = tempList[0];
 				morph.base = items[items.length - 3];
 				morph.pos = items[0];
 				morph.posd = items[1];
 				pos.morph.add(morph);
-				this.cabochaList.set(this.cabochaList.size() - 1, pos);
+				cabochaList.set(cabochaList.size() - 1, pos);
 			}
 		}
-		return this.cabochaList;
+		return cabochaList;
 	}
 	
 	class POS {
