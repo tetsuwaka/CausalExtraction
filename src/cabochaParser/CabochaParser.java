@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class CabochaParser {
 	
+	/**
+	 * cabochaの結果を受け取って、パースする関数
+	 * @param cabochaResult cabochaの結果
+	 * @return カボリスト（cabochaの結果をパースしたもの）
+	 */
 	ArrayList<POS> parse(String cabochaResult) {
 		ArrayList<POS> cabochaList = new ArrayList<POS>(); 
 		
