@@ -17,7 +17,7 @@ public class parserTest {
 		}
 		System.out.println("終了");
 		
-		CausalExtaraction ce = new CausalExtaraction();
+		CausalExtraction ce = new CausalExtraction();
 		System.out.println(ce.removeKoto("ほげほげなどの"));
 		
 		test = StringUtilities.join("\n", ExecCabocha.exec("円高のため、不況になった。"));

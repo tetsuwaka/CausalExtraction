@@ -5,7 +5,7 @@ import java.util.regex.*;
 
 import cabochaParser.CabochaParser.*;
 
-public class CausalExtaraction {
+public class CausalExtraction {
 	
 	// 指示詞のリスト
 	private String[] demonList;
@@ -17,7 +17,7 @@ public class CausalExtaraction {
 	private Pattern pGomi = Pattern.compile("。|、|の");
 	
 	
-	public CausalExtaraction() {
+	public CausalExtraction() {
 		super();
 		this.demonList = FileUtilities.readDemonList();
 	}
@@ -27,7 +27,7 @@ public class CausalExtaraction {
 	 * @param str 文字列
 	 * @return 「こと」などを削除した文字列
 	 */
-	String removeKoto(String str) {
+	public String removeKoto(String str) {
 		Matcher m = this.pKoto.matcher(str);
 		if (m.find()) {
 			str = this.removeKoto(m.replaceAll(""));
@@ -41,7 +41,7 @@ public class CausalExtaraction {
 	 * @param clue 手がかり表現
 	 * @return 核文節IDのリスト
 	 */
-	ArrayList<Integer> getCoreIds(ArrayList<POS> caboList, String clue) {
+	public ArrayList<Integer> getCoreIds(ArrayList<POS> caboList, String clue) {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		String word = "";
 		for (POS pos : caboList) {
@@ -61,7 +61,7 @@ public class CausalExtaraction {
 	 * @param pos POSクラスのインスタンス
 	 * @return 文字列
 	 */
-	String removeParticle(POS pos) {
+	public String removeParticle(POS pos) {
 		String word = "";
 		boolean flag = false;
 		for (Morph morph : pos.morph) {
@@ -87,7 +87,7 @@ public class CausalExtaraction {
 	 * @param coreId 核文節Id
 	 * @return 結果表現
 	 */
-	String getResultVP(ArrayList<POS> caboList, String clue, int coreId) {
+	public String getResultVP(ArrayList<POS> caboList, String clue, int coreId) {
 		boolean flag = false;
 		int chunkId = -1;
 		String word = "";
