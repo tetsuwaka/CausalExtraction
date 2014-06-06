@@ -3,6 +3,8 @@ package cabochaParser;
 import java.util.ArrayList;
 import java.util.regex.*;
 
+import com.google.common.collect.Lists;
+
 import cabochaParser.CabochaParser.*;
 
 public class CausalExtraction {
@@ -41,7 +43,7 @@ public class CausalExtraction {
 	 * @param clue 手がかり表現
 	 * @return 核文節IDのリスト
 	 */
-	public ArrayList<Integer> getCoreIds(ArrayList<POS> caboList, String clue) {
+	public Integer[] getCoreIds(ArrayList<POS> caboList, String clue) {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		String word = "";
 		for (POS pos : caboList) {
@@ -53,7 +55,7 @@ public class CausalExtraction {
 				word = "";
 			}
 		}
-		return ids;
+		return (Integer[])ids.toArray(new Integer[ids.size()]);
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class CausalExtraction {
 	public String removeParticle(POS pos) {
 		String word = "";
 		boolean flag = false;
-		for (Morph morph : pos.morph) {
+		for (Morph morph : Lists.reverse(pos.morph)) {
 			if (flag) {
 				word = morph.face + word;
 			} else {

@@ -17,13 +17,6 @@ public class parserTest {
 		}
 		System.out.println("終了");
 		
-		CausalExtraction ce = new CausalExtraction();
-		System.out.println(ce.removeKoto("ほげほげなどの"));
-		
-		test = StringUtilities.join("\n", ExecCabocha.exec("円高のため、不況になった。"));
-		results = parser.parse(test);
-		System.out.println(ce.getCoreIds(results, "ため、"));
-		
 		int[] a = {1, 2, 3};
 		System.out.println(a[a.length-1]);
 		
