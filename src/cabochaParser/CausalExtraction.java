@@ -3,8 +3,6 @@ package cabochaParser;
 import java.util.ArrayList;
 import java.util.regex.*;
 
-import com.google.common.collect.Lists;
-
 import cabochaParser.CabochaParser.*;
 
 public class CausalExtraction {
@@ -66,7 +64,7 @@ public class CausalExtraction {
 	public String removeParticle(POS pos) {
 		String word = "";
 		boolean flag = false;
-		for (Morph morph : Lists.reverse(pos.morph)) {
+		for (Morph morph : Reversed.reversed(pos.morph)) {
 			if (flag) {
 				word = morph.face + word;
 			} else {
