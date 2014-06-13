@@ -39,7 +39,7 @@ public class CausalExtraction {
 	}
 
 	/**
-	 * 指示師が先頭に含まれているか否かを判定
+	 * 指示詞が先頭に含まれているか否かを判定
 	 * @param sentence 文
 	 * @return 含まれているばTrue, いなければFalse
 	 */
