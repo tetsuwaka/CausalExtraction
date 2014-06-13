@@ -136,12 +136,12 @@ public class CausalExtraction {
 	
 	/**
 	 * @param caboList カボリスト
-	 * @param clueId 核文節のID
-	 * @param clueChunkId 基点文節のID
+	 * @param coreId 核文節のID
 	 * @return 結果表現
 	 */
-	public String getResultNP(ArrayList<POS> caboList, int clueId, int clueChunkId) {
+	public String getResultNP(ArrayList<POS> caboList, int coreId) {
 		String result = "";
+		int clueChunkId = caboList.get(coreId).chunk;
 		HashMap<Integer, ArrayList<Integer>> passiveHash = new HashMap<Integer, ArrayList<Integer>>();
 		
 		// 係り元IDの連想配列を得る
@@ -170,7 +170,7 @@ public class CausalExtraction {
 				for (int p : passiveHash.get(pos.chunk)) {
 					passive = p < passive ? p : passive;
 				}
-				if (passive < clueId) {
+				if (passive < coreId) {
 					result = result + this.removeParticle(pos);
 					break;
 				}
