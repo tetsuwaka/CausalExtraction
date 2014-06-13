@@ -32,6 +32,14 @@ public class CausalExtractionTest {
 		str = this.ce.removeKoto("ほげほげことのなど等");
 		assertThat("ほげほげ", is(str));
 	}
+	
+	@Test
+	public void testIncludeDemon() {
+		assertThat(false, is(this.ce.includeDemon("あたなのために")));
+		assertThat(false, is(this.ce.includeDemon("私それで")));
+		assertThat(true, is(this.ce.includeDemon("そのため")));
+		assertThat(true, is(this.ce.includeDemon("それで")));
+	}
 
 	@Test
 	public void testGetCoreIds() throws IOException, InterruptedException {
@@ -62,5 +70,25 @@ public class CausalExtractionTest {
 	public void testGetResultVP() {
 		fail("Not yet implemented");
 	}
+	
+	@Test
+	public void testGetResultNP() throws Exception {
+		String str = StringUtilities.join("\n", ExecCabocha.exec("円高による不況の影響で、買い物客が激減。"));
+		ArrayList<POS> caboList = parser.parse(str);
+		assertThat("不況の影響", is(this.ce.getResultNP(caboList, 0, 1)));
+	}
 
+	@Test
+	public void testGetBasis() throws Exception {
+		String str = StringUtilities.join("\n", ExecCabocha.exec("円高のため、不況になった。"));
+		ArrayList<POS> caboList = parser.parse(str);
+		assertThat("円高", is(this.ce.getBasis(caboList, "ため、", 1)));
+		assertThat("", is(this.ce.getBasis(caboList, "ため、", 3)));
+		
+		str = StringUtilities.join("\n", ExecCabocha.exec("十分なデータの蓄積がなく、合理的な見積もりが困難であるため、権利行使期間の中間点において行使されるものと想定して見積もっております。"));
+		caboList = parser.parse(str);
+		Integer[] coreIds = this.ce.getCoreIds(caboList, "ため、");
+		assertThat("十分なデータの蓄積がなく、合理的な見積もりが困難である", is(this.ce.getBasis(caboList, "ため、", coreIds[0])));
+		assertThat("", is(this.ce.getBasis(caboList, "ため、", 1)));
+	}
 }
