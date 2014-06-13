@@ -65,7 +65,7 @@ public class CausalExtraction {
 			for (String s : pos.str) {
 				word = word + s;
 			}
-			if (word.indexOf(clue) != -1) {
+			if (StringUtilities.in(clue, word)) {
 				ids.add(pos.id);
 				word = "";
 			}
@@ -86,7 +86,7 @@ public class CausalExtraction {
 				word = morph.face + word;
 			} else {
 				if (
-					(morph.pos.indexOf("助詞") == -1) &&
+					(!StringUtilities.in("助詞", morph.pos)) &&
 					(!this.pGomi.matcher(morph.face).find()) 
 				) {
 					flag = true;
@@ -158,8 +158,8 @@ public class CausalExtraction {
 			if (pos.id < clueChunkId) {
 				continue;
 			}
-			if ((pos.morph.get(pos.morph.size() - 1).posd.indexOf("格助詞") != -1) ||
-				(pos.morph.get(pos.morph.size() - 2).posd.indexOf("格助詞") != -1) // 読点がある場合
+			if ((StringUtilities.in("格助詞", pos.morph.get(pos.morph.size() - 1).posd)) ||
+				(StringUtilities.in("格助詞", pos.morph.get(pos.morph.size() - 2).posd)) // 読点がある場合
 			) {
 				result = result + this.removeParticle(pos);
 				break;
@@ -181,7 +181,7 @@ public class CausalExtraction {
 				tempWord = tempWord + str;
 			}
 			
-			if (tempWord.indexOf("など、") != -1) {
+			if (StringUtilities.in("など、", tempWord)) {
 				result = result + this.removeParticle(pos);
 				break;
 			}
@@ -191,8 +191,49 @@ public class CausalExtraction {
 		return this.removeKoto(result);
 	}
 	
-	public String getSubj(ArrayList<POS> caboList, int clueId, int clueChunkId) {
-		return "";
+	/**
+	 * 結果表現の主部を獲得
+	 * @param caboList カボリスト
+	 * @param coreId 核文節のID
+	 * @return 結果表現の主部
+	 */
+	public String getSubj(ArrayList<POS> caboList, int coreId) {
+		int clueChunkId = caboList.get(coreId).chunk;
+		boolean flag = false;
+		String subj = "";
+		String tempWord = "";
+		int subjId = -1;
+		
+		for (POS pos : Reversed.reversed(caboList)) {
+			tempWord = "";
+			for (String str : pos.str) {
+				tempWord = tempWord + str;
+			}
+			
+			if ((pos.id < coreId - 1) && (pos.chunk == clueChunkId)){
+				if (pos.morph.get(0).pos.equals("接続詞")) {
+					break;
+				}
+				for (Morph morph : Reversed.reversed(pos.morph)) {
+					if (StringUtilities.in("格助詞", morph.posd) ||
+						StringUtilities.in("係助詞", morph.posd)
+					) {
+						flag = true;
+						subjId = pos.id;
+					} else {
+						if (!StringUtilities.in("記号", morph.pos)) {
+							break;
+						}
+					}
+				}
+			}
+			
+			if ((flag) && (pos.chunk == subjId) && (pos.id == subjId - 1)) {
+				subj = tempWord + subj;
+				subjId = -1;
+			}
+		}
+		return subj;
 	}
 	
 	public String getKotoResult(ArrayList<POS> caboList, int resultId) {
@@ -246,7 +287,7 @@ public class CausalExtraction {
 			}
 			
 			// 原因表現の末尾判定と獲得
-			if ((word.indexOf(clue) != -1) && 
+			if ((StringUtilities.in(clue, word)) && 
 				((pos.id == coreId) || (pos.id + 1 == coreId)) &&
 				(!flag)
 			) {
@@ -255,7 +296,7 @@ public class CausalExtraction {
 //				if (clue.indexOf("。") != -1) {
 //					endFlag = true;
 //				}
-			} else if (word.indexOf(clue) != -1) {
+			} else if (StringUtilities.in(clue, word)) {
 				word = word.split(clue)[0];
 			}
 		}
