@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import cabochaParser.CabochaParser.POS;
+import cabochaParser.CabochaParser.*;
 
 public class CausalExtractionTest {
 
