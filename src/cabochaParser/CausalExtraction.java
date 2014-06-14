@@ -85,7 +85,7 @@ public class CausalExtraction {
 				word = morph.face + word;
 			} else {
 				if (
-					(!StringUtilities.in("助詞", morph.pos)) &&
+					(!morph.pos.equals("助詞")) &&
 					(!this.pGomi.matcher(morph.face).find()) 
 				) {
 					flag = true;
@@ -157,8 +157,8 @@ public class CausalExtraction {
 			if (pos.id < clueChunkId) {
 				continue;
 			}
-			if ((StringUtilities.in("格助詞", pos.morph.get(pos.morph.size() - 1).posd)) ||
-				(StringUtilities.in("格助詞", pos.morph.get(pos.morph.size() - 2).posd)) // 読点がある場合
+			if (pos.morph.get(pos.morph.size() - 1).posd.equals("格助詞") ||
+				pos.morph.get(pos.morph.size() - 2).posd.equals("格助詞") // 読点がある場合
 			) {
 				result = result + this.removeParticle(pos);
 				break;
@@ -214,13 +214,11 @@ public class CausalExtraction {
 					break;
 				}
 				for (Morph morph : Reversed.reversed(pos.morph)) {
-					if (StringUtilities.in("格助詞", morph.posd) ||
-						StringUtilities.in("係助詞", morph.posd)
-					) {
+					if (morph.posd.equals("格助詞") || morph.posd.equals("係助詞")) {
 						flag = true;
 						subjId = pos.id;
 					} else {
-						if (!StringUtilities.in("記号", morph.pos)) {
+						if (!morph.pos.equals("記号")) {
 							break;
 						}
 					}
