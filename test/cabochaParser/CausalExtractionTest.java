@@ -67,7 +67,11 @@ public class CausalExtractionTest {
 	}
 
 	@Test
-	public void testGetResultVP() {
+	public void testGetResultVP() throws Exception {
+		String sentence = "円高による不況の影響で、買い物客が激減した。";
+		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("買い物客が激減した。", is(this.ce.getResultVP(caboList, "で、", 2)));
+		
 		fail("Not yet implemented");
 	}
 	

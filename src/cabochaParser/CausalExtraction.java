@@ -118,13 +118,13 @@ public class CausalExtraction {
 
 			if (flag && pos.id < chunkId) {
 				resultExpression = resultExpression + tempWord;
-			} else if (flag && pos.id < chunkId) {
+			} else if (flag && pos.id == chunkId) {
 				resultExpression = resultExpression + removeParticle(pos);
 			}
 
 			if (pos.id == coreId) {
 				String[] temp = word.split(clue);
-				resultExpression = temp[temp.length - 1];
+				resultExpression = temp.length > 1 ? temp[temp.length - 1]  : "";
 				chunkId = pos.chunk;
 				flag = true;
 			}
@@ -231,10 +231,6 @@ public class CausalExtraction {
 			}
 		}
 		return subj;
-	}
-	
-	public String getKotoResult(ArrayList<POS> caboList, int resultId) {
-		return "";
 	}
 	
 	public String getBasis(ArrayList<POS> caboList, String clue, int coreId) {
