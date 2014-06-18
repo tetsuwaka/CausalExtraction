@@ -95,6 +95,11 @@ public class CausalExtractionTest {
 	}
 	
 	@Test
+	public void testGetKotoResult() throws Exception {
+		fail("Not yet implemented");
+	}
+	
+	@Test
 	public void testGetBasis() throws Exception {
 		String str = StringUtilities.join("\n", ExecCabocha.exec("円高のため、不況になった。"));
 		ArrayList<POS> caboList = parser.parse(str);
@@ -109,7 +114,17 @@ public class CausalExtractionTest {
 	}
 	
 	@Test
+	public void testGetPatternCFlag() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
 	public void testGetIncludingClues() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testGetCausalExpression() {
 		fail("Not yet implemented");
 	}
 }
