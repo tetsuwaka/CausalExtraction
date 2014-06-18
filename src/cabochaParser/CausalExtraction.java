@@ -120,6 +120,7 @@ public class CausalExtraction {
 				resultExpression = resultExpression + tempWord;
 			} else if (flag && pos.id == chunkId) {
 				resultExpression = resultExpression + removeParticle(pos);
+				break;
 			}
 
 			if (pos.id == coreId) {
@@ -300,5 +301,24 @@ public class CausalExtraction {
 //		}
 		
 		return basis;
+	}
+	
+	/**
+	 * 手がかり表現かぶり判定処理
+	 * @param sentence 手がかり表現を含む文
+	 * @param clueHash 手がかり表現かぶりHashMap
+	 * @return 手がかり表現のかぶり判定を格納したHashMap
+	 */
+	public HashMap<String, Integer> getIncludinglues(String sentence, HashMap<String, String[]>clueHash) {
+		HashMap<String, Integer> hash = new HashMap<String, Integer>();
+		for (String clue : clueHash.keySet()) {
+			hash.put(clue, 0);
+			for (String _clue : clueHash.get(clue)) {
+				if (StringUtilities.in(_clue, sentence)) {
+					hash.put(clue, 1);
+				}
+			}
+		}
+		return hash;
 	}
 }

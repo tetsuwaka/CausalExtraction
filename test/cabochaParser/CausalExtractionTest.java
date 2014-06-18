@@ -107,4 +107,9 @@ public class CausalExtractionTest {
 		assertThat("十分なデータの蓄積がなく、合理的な見積もりが困難である", is(this.ce.getBasis(caboList, "ため、", coreIds[0])));
 		assertThat("", is(this.ce.getBasis(caboList, "ため、", 1)));
 	}
+	
+	@Test
+	public void testGetIncludingClues() {
+		fail("Not yet implemented");
+	}
 }
