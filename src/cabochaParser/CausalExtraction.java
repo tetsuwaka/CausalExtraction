@@ -272,7 +272,7 @@ public class CausalExtraction {
 				}
 			}
 			if (pos.id == cNum) {
-				result = this.removeParticle(pos);
+				result = temp;
 				flag = true;
 			}
 		}
