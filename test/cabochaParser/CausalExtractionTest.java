@@ -122,15 +122,15 @@ public class CausalExtractionTest {
 	public void testGetKotoResult() throws Exception {
 		String sentence = "ブッシュ大統領が二十九日の一般教書演説で雇用を最重視した経済対策を強調したのも、景気回復を確実なものにするには、雇用悪化に歯止めをかける必要があると判断したためだ。";
 		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
-		assertThat("ブッシュ大統領が二十九日の一般教書演説で雇用を最重視した経済対策を強調したのも、", is(this.ce.getKotoResult(caboList, this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ためだ。")[0]))));
+		assertThat("ブッシュ大統領が二十九日の一般教書演説で雇用を最重視した経済対策を強調したのも、", is(this.ce.getKotoResult(caboList, 6)));
 		
 		sentence = "日銀が景気の先行きに慎重なのは、設備投資調整や公共事業の拡大などプラス要因がある半面、雇用調整や円高などマイナス要因も目立ち、「両者がせめぎ合っているのが現状」と見ているためだ。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
-		assertThat("日銀が景気の先行きに慎重なのは、", is(this.ce.getKotoResult(caboList, this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ためだ。")[0]))));
+		assertThat("日銀が景気の先行きに慎重なのは、", is(this.ce.getKotoResult(caboList, 3)));
 		
 		sentence = "配当原資が不足するのは、前期末の有価証券評価差額金が十七億円強の含み損となったため。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
-		assertThat("配当原資が不足するのは、", is(this.ce.getKotoResult(caboList, this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ため。")[0]))));
+		assertThat("配当原資が不足するのは、", is(this.ce.getKotoResult(caboList, 1)));
 	}
 	
 	@Test
@@ -148,8 +148,18 @@ public class CausalExtractionTest {
 	}
 	
 	@Test
-	public void testGetPatternCFlag() {
-		fail("Not yet implemented");
+	public void testGetPatternCFlag() throws Exception {
+		String sentence = "ブッシュ大統領が二十九日の一般教書演説で雇用を最重視した経済対策を強調したのも、景気回復を確実なものにするには、雇用悪化に歯止めをかける必要があると判断したためだ。";
+		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat(6, is(this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ためだ。")[0])));
+		
+		sentence = "日銀が景気の先行きに慎重なのは、設備投資調整や公共事業の拡大などプラス要因がある半面、雇用調整や円高などマイナス要因も目立ち、「両者がせめぎ合っているのが現状」と見ているためだ。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat(3, is(this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ためだ。")[0])));
+		
+		sentence = "配当原資が不足するのは、前期末の有価証券評価差額金が十七億円強の含み損となったため。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat(1, is(this.ce.getPatternCFlag(caboList, this.ce.getCoreIds(caboList, "ため。")[0])));
 	}
 	
 	@Test
