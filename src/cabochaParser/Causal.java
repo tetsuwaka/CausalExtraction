@@ -6,6 +6,9 @@ public class Causal {
 	String result = "";
 	String subj = "";
 	String pattern = "";
+	String clue = "";
+	String articleId = "";
+	String sentence ="";
 	
 	public Causal() {
 		super();

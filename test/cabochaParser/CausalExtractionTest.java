@@ -163,8 +163,12 @@ public class CausalExtractionTest {
 	}
 	
 	@Test
-	public void testGetIncludingClues() {
-		fail("Not yet implemented");
+	public void testGetIncludingClues() throws Exception {
+		String clue = "ため、";
+		String sentence = "円高のため、不況になった。";
+		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		Causal cause = this.ce.getCausalExpression(caboList, clue, 1, sentence, "");
+		assertThat(new Causal("円高", "不況になった。", "", "A"), is(cause));
 	}
 	
 	@Test
