@@ -3,7 +3,7 @@ package cabochaParser;
 import java.util.ArrayList;
 
 public class CabochaParser {
-	
+
 	/**
 	 * cabochaの結果を受け取って、パースする関数
 	 * @param cabochaResult cabochaの結果
@@ -11,7 +11,7 @@ public class CabochaParser {
 	 */
 	ArrayList<POS> parse(String cabochaResult) {
 		ArrayList<POS> cabochaList = new ArrayList<POS>(); 
-		
+
 		String lines[] = cabochaResult.split("\n");
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i].trim();
@@ -45,19 +45,19 @@ public class CabochaParser {
 		}
 		return cabochaList;
 	}
-	
+
 	class POS {
 		public int id;
 		public int chunk;
 		public ArrayList<String> str = new ArrayList<String>();
 		public ArrayList<Morph> morph = new ArrayList<Morph>();
 	}
-	
+
 	class Morph {
 		public String face;
 		public String base;
 		public String pos;
 		public String posd;
 	}
-	
+
 }

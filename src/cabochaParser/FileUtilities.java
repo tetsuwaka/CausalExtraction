@@ -25,11 +25,11 @@ public class FileUtilities {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		
+
 		// ArrayListからString[]に変換してから、返す
 		return (String[])strings.toArray(new String[strings.size()]);
 	}
-	
+
 	/**
 	 * 手がかり表現のリストをファイルから読み取って返す関数
 	 * @return 手がかり表現のリスト
@@ -55,7 +55,7 @@ public class FileUtilities {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		
+
 		// ArrayListからString[]に変換してから、返す
 		String[] clues = (String[])strings.toArray(new String[strings.size()]);
 		String[] eclues = (String[])endClues.toArray(new String[endClues.size()]);

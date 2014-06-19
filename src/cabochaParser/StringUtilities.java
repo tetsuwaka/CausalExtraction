@@ -23,7 +23,7 @@ public class StringUtilities {
 		}
 		return line;
 	}
-	
+
 	/**
 	 * 文字列str2に文字列str1が含まれるか否かを判定
 	 * @param str1

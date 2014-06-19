@@ -298,10 +298,21 @@ public class CausalExtraction {
 				tempWord = tempWord + morph.face;
 			}
 			word = tempWord + word;
+			
+			// 操作終了条件：核文節に係っていて、条件を満たした場合
+			if (pos.chunk == coreId && clue.endsWith("。") && pos.id != coreId - 1) {
+				if (pos.morph.get(pos.morph.size() - 1).posd.equals("接続助詞") || 
+					pos.morph.get(pos.morph.size() - 2).posd.equals("接続助詞") ||
+					pos.morph.get(pos.morph.size() - 1).posd.equals("係助詞") || 
+					pos.morph.get(pos.morph.size() - 2).posd.equals("係助詞")
+				) {
+					break;
+				}
+			}
 
 			// 操作終了条件：核文節より文末に近い文節に係っている場合
 			if (pos.chunk > coreId) {
-				flag = false;
+				flag = false; // ここでbreakすると、直近の原因表現を獲得できなくなる
 			}
 
 			// 原因表現を構成する文字列を足していく
@@ -319,7 +330,8 @@ public class CausalExtraction {
 				(!flag)
 			) {
 				flag = true;
-				basis = this.removeKoto(word.split(clue)[0]);
+				String [] temp = word.split(clue);
+				basis = temp.length == 0 ? "" : this.removeKoto(temp[0]);
 			} else if (StringUtilities.in(clue, word)) {
 				word = word.split(clue)[0];
 			}
@@ -380,7 +392,7 @@ public class CausalExtraction {
 
 	public Causal getCausalExpression(ArrayList<POS> caboList, String clue, int coreId, String sentence, String beforeSentece) {
 		Causal causal = new Causal();
-		int chunkId = -1;
+		int chunkId = caboList.get(coreId).chunk;
 
 		if (Arrays.asList(this.eclueList).contains(clue)) {
 			causal.basis = beforeSentece;
@@ -394,7 +406,7 @@ public class CausalExtraction {
 			causal.pattern = "E";
 
 		// Pattern AとBの場合
-		} else if (!clue.endsWith("。") && sentence.endsWith(clue + "。")) {
+		} else if (!clue.endsWith("。") && !sentence.endsWith(clue + "。")) {
 			Morph lastMorph = caboList.get(chunkId).morph.get(caboList.get(chunkId).morph.size() - 1);
 			Morph firstMorph = caboList.get(chunkId).morph.get(0);
 			if (lastMorph.pos.equals("動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
@@ -422,4 +434,5 @@ public class CausalExtraction {
 		}
 		return causal;
 	}
+
 }

@@ -9,11 +9,11 @@ public class Causal {
 	String clue = "";
 	String articleId = "";
 	String sentence ="";
-	
+
 	public Causal() {
 		super();
 	}
-	
+
 	public Causal(String basis, String result, String subj, String pattern) {
 		super();
 		this.basis = basis;
