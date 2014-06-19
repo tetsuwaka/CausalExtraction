@@ -63,16 +63,30 @@ public class CausalExtractionTest {
 		assertThat("不況", is(this.ce.removeParticle(caboList.get(2))));
 		assertThat("なった", is(this.ce.removeParticle(caboList.get(3))));
 		assertThat("ため", is(this.ce.removeParticle(caboList.get(4))));
-		assertThat("損した", is(this.ce.removeParticle(caboList.get(5))));
+		assertThat("損した。", is(this.ce.removeParticle(caboList.get(5))));
 	}
 
 	@Test
 	public void testGetResultVP() throws Exception {
+		String clue = "で、";
 		String sentence = "円高による不況の影響で、買い物客が激減した。";
 		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
-		assertThat("買い物客が激減した。", is(this.ce.getResultVP(caboList, "で、", 2)));
+		assertThat("買い物客が激減した。", is(this.ce.getResultVP(caboList, clue, 2)));
 		
-		fail("Not yet implemented");
+		clue = "ため、";
+		sentence = "十分なデータの蓄積がなく、合理的な見積もりが困難であるため、権利行使期間の中間点において行使されるものと想定して見積もっております。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("権利行使期間の中間点において行使される", is(this.ce.getResultVP(caboList, clue, this.ce.getCoreIds(caboList, clue)[0])));
+		
+		clue = "により";
+		sentence = "食品業界で、景気後退に伴う消費マインドの冷え込みや、生活防衛による購買単価の落ち込みなどにより企業業績の後退を余儀なくされ、企業間競争はますます熾烈さを増してまいりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("企業業績の後退を余儀なくされ", is(this.ce.getResultVP(caboList, clue, this.ce.getCoreIds(caboList, clue)[0])));
+		
+		clue = "から、";
+		sentence = "製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", is(this.ce.getResultVP(caboList, clue, this.ce.getCoreIds(caboList, clue)[0])));
 	}
 	
 	@Test
@@ -84,14 +98,24 @@ public class CausalExtractionTest {
 		sentence = "円高による不況で、買い物客が激減。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
 		assertThat("不況", is(this.ce.getResultNP(caboList, 0)));
-		
-//		fail("Not yet implemented");
-		// 追加した方がいいが、思いつかない
 	}
 
 	@Test
-	public void testGetSubj() {
-		fail("Not yet implemented");
+	public void testGetSubj() throws Exception {
+		String clue = "により";
+		String sentence = "食品業界で、景気後退に伴う消費マインドの冷え込みや、生活防衛による購買単価の落ち込みなどにより企業業績の後退を余儀なくされ、企業間競争はますます熾烈さを増してまいりました。";
+		ArrayList<POS> caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("食品業界で、", is(this.ce.getSubj(caboList, this.ce.getCoreIds(caboList, clue)[0])));
+		
+		clue = "から、";
+		sentence = "製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("製菓原材料類は、", is(this.ce.getSubj(caboList, this.ce.getCoreIds(caboList, clue)[0])));
+	
+		clue = "で、";
+		sentence = "茸国内の生茸の販売は、消費全体が収縮する中で茸の需要も低迷し、価格は平年を下回る厳しい相場で推移したことで、販売量、販売価格ともに前年を割り込む結果となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("茸国内の生茸の販売は、", is(this.ce.getSubj(caboList, this.ce.getCoreIds(caboList, clue)[0])));
 	}
 	
 	@Test

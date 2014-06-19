@@ -38,7 +38,7 @@ public class FileUtilities {
 		ArrayList<String> strings = new ArrayList<String>();
 		ArrayList<String> endClues = new ArrayList<String>();
 		try {
-			File file = new File("src/cabochaParser/cluelist.txt");
+			File file = new File("src/cabochaParser/clue_list.txt");
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str = br.readLine();
 			while (str != null) {

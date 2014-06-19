@@ -22,7 +22,7 @@ public class CausalExtraction {
 	private Pattern pKoto = Pattern.compile("こと$|など$|等$|の$");
 
 	// 文字列に不要な文字が含まれているかを調べる正規表現
-	private Pattern pGomi = Pattern.compile("。|、|の");
+	private Pattern pGomi = Pattern.compile("、|の");
 
 
 	public CausalExtraction() {
@@ -226,6 +226,7 @@ public class CausalExtraction {
 				for (Morph morph : Reversed.reversed(pos.morph)) {
 					if (morph.posd.equals("格助詞") || morph.posd.equals("係助詞")) {
 						flag = true;
+						subj = tempWord;
 						subjId = pos.id;
 					} else {
 						if (!morph.pos.equals("記号")) {
@@ -237,7 +238,7 @@ public class CausalExtraction {
 
 			if ((flag) && (pos.chunk == subjId) && (pos.id == subjId - 1)) {
 				subj = tempWord + subj;
-				subjId = -1;
+				subjId -= 1;
 			}
 		}
 		return subj;
