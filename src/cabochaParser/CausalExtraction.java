@@ -417,10 +417,10 @@ public class CausalExtraction {
 			} else if (firstMorph.pos.equals("形容詞")) {
 				causal.result = this.getResultVP(caboList, clue, coreId);
 			}
-			
+
 			// Patternの判定
 			causal.pattern = causal.subj.equals("") ? "A" : "B";
-		
+
 		// Pattern CとDの場合
 		} else {
 			int cNum = this.getPatternCFlag(caboList, coreId);
