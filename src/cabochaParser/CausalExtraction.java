@@ -390,6 +390,15 @@ public class CausalExtraction {
 		return hash;
 	}
 
+	/**
+	 * 適切なPatternを選択し、原因表現・結果表現を抽出
+	 * @param caboList カボリスト
+	 * @param clue 手がかり表現
+	 * @param coreId 核文節のID
+	 * @param sentence 手がかり表現を含む文
+	 * @param beforeSentece 一つ前の文
+	 * @return Causalインスタンス(原因・結果表現、結果表現の主部、Pattern)
+	 */
 	public Causal getCausalExpression(ArrayList<POS> caboList, String clue, int coreId, String sentence, String beforeSentece) {
 		Causal causal = new Causal();
 		int chunkId = caboList.get(coreId).chunk;
@@ -400,6 +409,11 @@ public class CausalExtraction {
 			causal.basis = this.getBasis(caboList, clue, coreId);
 		}
 
+		// 原因表現がとれなかったり、原因表現に指示詞が含まれている場合
+		if (causal.basis.equals("") || this.includeDemon(causal.basis)) {
+			return new Causal();
+		}
+		
 		// Pattern Eの場合
 		if (Arrays.asList(this.eclueList).contains(clue)) {
 			causal.result = sentence.replaceAll(clue, "");

@@ -188,12 +188,12 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));	
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.sentence, is(causal.sentence));
-
-		clue = "から、";
-		sentence = "製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。";
+		
+		clue = "による";
+		sentence = "この結果による不況の影響で、買い物客が激減。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
-		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "");
-		seikai = new Causal("製菓・製パン向けの販売が総じて低調に推移した", "各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", "製菓原材料類は、", "B");
+		causal = this.ce.getCausalExpression(caboList, clue, 0, sentence, "");
+		seikai = new Causal("", "", "", "");
 		assertThat(seikai.basis, is(causal.basis));
 		assertThat(seikai.result, is(causal.result));	
 		assertThat(seikai.subj, is(causal.subj));
@@ -225,7 +225,7 @@ public class CausalExtractionTest {
 		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
 		seikai = new Causal("公共工事と住宅建設が高水準を維持、個人消費も堅調なうえ、設備投資が前年度を上回る見通しとなっている", "TTT", "", "D");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.sentence, is(causal.sentence));
 
@@ -235,7 +235,7 @@ public class CausalExtractionTest {
 		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
 		seikai = new Causal("TTT", "平成２３年３月期第１四半期の経営成績（累計）及び対前年同四半期増減率については記載しておりません。", "", "E");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.sentence, is(causal.sentence));
 	}
