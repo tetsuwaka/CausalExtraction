@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Test;
 
@@ -164,7 +165,15 @@ public class CausalExtractionTest {
 
 	@Test
 	public void testGetIncludingClues() throws Exception {
-		fail("Not yet implemented");
+		String sentence = "円高を背景に、景気が悪化した。";
+		HashMap<String, Integer> result = this.ce.getIncludingClues(sentence, this.ce.clueHash);
+		assertThat(result.get("を背景に、"), is(0));
+		assertThat(result.get("を背景に"), is(1)); // かぶりがあったら1になる
+		
+		sentence = "円高を背景に景気が悪化した。";
+		result = this.ce.getIncludingClues(sentence, this.ce.clueHash);
+		assertThat(result.get("を背景に、"), is(0));
+		assertThat(result.get("を背景に"), is(0));
 	}
 
 	@Test
@@ -238,5 +247,15 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.sentence, is(causal.sentence));
+		
+//		clue = "で、";
+//		sentence = "下半期では、上半期に導入を予定していながら諸事情により計画が遅れた案件の成約が見込めますので、売上高に関しましては上半期の不足を補い、期初の通期予想を達成するものと思われますが、利益に関しましては、利益率が比較的低い低価格ツールの占める割合が増えていることが影響し若干減少する見通しです。";
+//		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+//		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "");
+//		seikai = new Causal("下半期では、上半期に導入を予定していながら諸事情により計画が遅れた案件の成約が見込めます", "売上高に関しましては上半期の不足を補い、期初の通期予想を達成するものと思われますが、利益に関しましては、利益率が比較的低い低価格ツールの占める割合が増えていることが影響し若干減少する見通しです。", "", "A");
+//		assertThat(seikai.basis, is(causal.basis));
+//		assertThat(seikai.result, is(causal.result));
+//		assertThat(seikai.subj, is(causal.subj));
+//		assertThat(seikai.sentence, is(causal.sentence));
 	}
 }

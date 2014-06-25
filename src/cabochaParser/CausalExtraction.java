@@ -17,6 +17,9 @@ public class CausalExtraction {
 
 	// 指示詞のリスト
 	private String[] demonList;
+	
+	// 手がかり表現かぶり判定HashMap
+	public HashMap<String, ArrayList<String>> clueHash;
 
 	// 文字列の末尾の「こと」などを見つける正規表現
 	private Pattern pKoto = Pattern.compile("こと$|など$|等$|の$");
@@ -31,8 +34,34 @@ public class CausalExtraction {
 		this.clueList = temp.get(0);
 		this.eclueList = temp.get(1);
 		this.demonList = FileUtilities.readDemonList();
+		this.clueHash = this.makeIncludingCluse();
 	}
-
+	
+	public CausalExtraction(ArrayList<String[]> clueList, String[] demoList) {
+		super();
+		this.clueList = clueList.get(0);
+		this.eclueList = clueList.get(1);
+		this.demonList = demoList;
+		this.clueHash = this.makeIncludingCluse();
+	}
+	
+	/**
+	 * 手がかり表現のかぶり判定HashMapを作成
+	 * @return 手がかり表現のかぶり判定HashMap
+	 */
+	public HashMap<String, ArrayList<String>> makeIncludingCluse() {
+		HashMap<String, ArrayList<String>> clueHash = new HashMap<String, ArrayList<String>>();
+		for (String clue1 : this.clueList) {
+			clueHash.put(clue1, new ArrayList<String>());
+			for (String clue2 : this.clueList) {
+				if (!clue1.equals(clue2) && StringUtilities.in(clue1, clue2)) {
+					clueHash.get(clue1).add(clue2);
+				}
+			}
+		}
+		return clueHash;
+	}
+	
 	/**
 	 * 入力された文字列の末尾の「こと」などを削除し、返す関数
 	 * @param str 文字列
@@ -377,7 +406,7 @@ public class CausalExtraction {
 	 * @param clueHash 手がかり表現かぶりHashMap
 	 * @return 手がかり表現のかぶり判定を格納したHashMap
 	 */
-	public HashMap<String, Integer> getIncludinglues(String sentence, HashMap<String, String[]>clueHash) {
+	public HashMap<String, Integer> getIncludingClues(String sentence, HashMap<String, ArrayList<String>>clueHash) {
 		HashMap<String, Integer> hash = new HashMap<String, Integer>();
 		for (String clue : clueHash.keySet()) {
 			hash.put(clue, 0);
