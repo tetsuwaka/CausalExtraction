@@ -50,7 +50,7 @@ public class CausalExtraction {
 	 * @return 手がかり表現のかぶり判定HashMap
 	 */
 	public HashMap<String, ArrayList<String>> makeIncludingCluse() {
-		HashMap<String, ArrayList<String>> clueHash = new HashMap<String, ArrayList<String>>();
+		HashMap<String, ArrayList<String>> clueHash = new HashMap<String, ArrayList<String>>(this.clueList.length);
 		for (String clue1 : this.clueList) {
 			clueHash.put(clue1, new ArrayList<String>());
 			for (String clue2 : this.clueList) {
