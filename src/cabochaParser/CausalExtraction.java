@@ -69,10 +69,7 @@ public class CausalExtraction {
 	 */
 	public String removeKoto(String str) {
 		Matcher m = this.pKoto.matcher(str);
-		if (m.find()) {
-			str = this.removeKoto(m.replaceAll(""));
-		}
-		return str;
+		return m.find() ? this.removeKoto(m.replaceAll("")) : str;
 	}
 
 	/**

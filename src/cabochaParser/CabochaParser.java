@@ -49,8 +49,8 @@ public class CabochaParser {
 	class POS {
 		public int id;
 		public int chunk;
-		public ArrayList<String> str = new ArrayList<String>();
-		public ArrayList<Morph> morph = new ArrayList<Morph>();
+		public ArrayList<String> str = new ArrayList<String>(5);
+		public ArrayList<Morph> morph = new ArrayList<Morph>(5);
 	}
 
 	class Morph {
