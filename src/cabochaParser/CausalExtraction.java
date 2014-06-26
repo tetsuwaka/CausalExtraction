@@ -99,9 +99,7 @@ public class CausalExtraction {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		String word = "";
 		for (POS pos : caboList) {
-			for (String s : pos.str) {
-				word = word + s;
-			}
+			word = word + StringUtilities.join("", pos.str);
 			if (StringUtilities.in(clue, word)) {
 				ids.add(pos.id);
 				word = "";
@@ -148,11 +146,8 @@ public class CausalExtraction {
 		String resultExpression = "";
 
 		for (POS pos : caboList) {
-			String tempWord = "";
-			for (String s : pos.str) {
-				word = word + s;
-				tempWord = tempWord + s;
-			}
+			String tempWord = StringUtilities.join("", pos.str);
+			word = word + tempWord;
 
 			if (flag && pos.id < chunkId) {
 				resultExpression = resultExpression + tempWord;
@@ -214,10 +209,7 @@ public class CausalExtraction {
 				}
 			}
 
-			String tempWord = "";
-			for (String str : pos.str) {
-				tempWord = tempWord + str;
-			}
+			String tempWord = StringUtilities.join("", pos.str);
 
 			if (StringUtilities.in("など、", tempWord)) {
 				result = result + this.removeParticle(pos);
@@ -243,10 +235,7 @@ public class CausalExtraction {
 		int subjId = -1;
 
 		for (POS pos : Reversed.reversed(caboList)) {
-			tempWord = "";
-			for (String str : pos.str) {
-				tempWord = tempWord + str;
-			}
+			tempWord = StringUtilities.join("", pos.str);
 
 			if ((pos.id < coreId - 1) && (pos.chunk == clueChunkId)){
 				if (pos.morph.get(0).pos.equals("接続詞")) {
@@ -285,10 +274,7 @@ public class CausalExtraction {
 		boolean flag = false;
 		
 		for (POS pos : Reversed.reversed(caboList)) {
-			temp = "";
-			for (String str : pos.str) {
-				temp = temp + str;
-			}
+			temp = StringUtilities.join("", pos.str);
 			
 			if (temp.endsWith("。") && flag) {
 				break;
@@ -322,10 +308,7 @@ public class CausalExtraction {
 
 		for (POS pos : Reversed.reversed(caboList)) {
 			// 末尾から文字を再構成していく
-			String tempWord = "";
-			for (Morph morph : pos.morph) {
-				tempWord = tempWord + morph.face;
-			}
+			String tempWord = StringUtilities.join("", pos.str);
 			word = tempWord + word;
 			
 			// 操作終了条件：核文節に係っていて、条件を満たした場合
@@ -455,6 +438,9 @@ public class CausalExtraction {
 			if (lastMorph.pos.equals("動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
 				causal.result = this.getResultVP(caboList, clue, coreId);
 				causal.subj = this.getSubj(caboList, coreId);
+			} else if (firstMorph.posd.equals("非自立")) {
+				causal.result = this.getResultVP(caboList, clue, coreId);
+				causal.result = StringUtilities.remove(causal.result, StringUtilities.join("", caboList.get(chunkId).str) + "$");
 			} else if (firstMorph.pos.equals("名詞")) {
 				causal.result = this.getResultNP(caboList, coreId);
 			} else if (firstMorph.pos.equals("形容詞")) {

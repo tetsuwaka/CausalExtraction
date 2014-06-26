@@ -1,6 +1,8 @@
 package cabochaParser;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtilities {
 
@@ -36,5 +38,17 @@ public class StringUtilities {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * 文字列strに含まれる文字列removeStrを削除する
+	 * @param str
+	 * @param removeStr
+	 * @return removeStrを削除した文字列str
+	 */
+	public static String remove(String str, String removeStr) {
+		Pattern pattern = Pattern.compile(removeStr);
+		Matcher m = pattern.matcher(str);
+		return m.find() ? m.replaceAll("") : str;
 	}
 }
