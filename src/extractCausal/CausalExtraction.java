@@ -40,7 +40,7 @@ public class CausalExtraction {
 		ArrayList<String[]> temp = FileUtilities.readClueList();
 		this.clueList = temp.get(0);
 		this.eclueList = temp.get(1);
-		this.demonList = FileUtilities.readDemonList();
+		this.demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
 		this.clueHash = this.makeIncludingCluse();
 	}
 	
