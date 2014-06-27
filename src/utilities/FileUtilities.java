@@ -35,11 +35,11 @@ public class FileUtilities {
 	 * 手がかり表現のリストをファイルから読み取って返す関数
 	 * @return 手がかり表現のリスト
 	 */
-	static public ArrayList<String[]> readClueList() {
+	static public ArrayList<String[]> readClueList(String filePath) {
 		ArrayList<String> strings = new ArrayList<String>();
 		ArrayList<String> endClues = new ArrayList<String>();
 		try {
-			File file = new File("src/extractCausal/clue_list.txt");
+			File file = new File(filePath);
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str = br.readLine();
 			while (str != null) {

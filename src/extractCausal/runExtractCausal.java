@@ -14,8 +14,8 @@ import utilities.FileUtilities;
 public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private String fileName;
 	static boolean flag = false;
-	private String[] demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
-	private ArrayList<String[]> clueList = FileUtilities.readClueList();
+	private String[] demonList = FileUtilities.readLines("demonstrative_list.txt");
+	private ArrayList<String[]> clueList = FileUtilities.readClueList("clue_list.txt");
 
 	public runExtractCausal(String fileName) {
 		super();
@@ -41,8 +41,17 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	}
 	
 	public static void main(String[] args) {
-		String[] files = FileUtilities.readLines("src/extractCausal/test_list.txt");
-		ExecutorService ex = Executors.newFixedThreadPool(2);
+		int threadNum = 2;
+		if (args.length != 1 && args.length != 2) {
+			System.err.println("ファイル一覧のパスを指定してください。");
+		}
+		String filePath = args[0];
+		if (args.length == 2) {
+			threadNum = Integer.parseInt(args[1]);
+		}
+
+		String[] files = FileUtilities.readLines(filePath);
+		ExecutorService ex = Executors.newFixedThreadPool(threadNum);
 		CompletionService<ArrayList<Causal>> completion = new ExecutorCompletionService<ArrayList<Causal>>(ex);
 		for (int i = 0; i < files.length; i++) {
 			completion.submit(new runExtractCausal(files[i]));

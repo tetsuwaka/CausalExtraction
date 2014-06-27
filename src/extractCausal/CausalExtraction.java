@@ -38,7 +38,7 @@ public class CausalExtraction {
 
 	public CausalExtraction() {
 		super();
-		ArrayList<String[]> temp = FileUtilities.readClueList();
+		ArrayList<String[]> temp = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
 		this.clueList = temp.get(0);
 		this.eclueList = temp.get(1);
 		this.demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
