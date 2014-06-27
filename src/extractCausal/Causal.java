@@ -22,5 +22,18 @@ public class Causal {
 		this.subj = subj;
 		this.pattern = pattern;
 	}
+	
+	public String toJson() {
+		String json = "{";
+		json += "\"clue\": " + "\"" + this.clue + "\", ";
+		json += "\"basis\": " + "\"" + this.basis + "\", ";
+		json += "\"result\": " + "\"" + this.result + "\", ";
+		json += "\"subj\": " + "\"" + this.subj + "\", ";
+		json += "\"pattern\": " + "\"" + this.pattern + "\", ";
+		json += "\"filePath\": " + "\"" + this.filePath + "\", ";
+		json += "\"line\": " + this.line;
+		json += "}";
+		return json;
+	}
 
 }

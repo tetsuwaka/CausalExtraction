@@ -1,9 +1,11 @@
 package extractCausal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.*;
+
 import utilities.FileUtilities;
 import utilities.Reversed;
 import utilities.StringUtilities;
@@ -468,7 +470,12 @@ public class CausalExtraction {
 		return causal;
 	}
 
-	public ArrayList<Causal> getInga(String fileName) throws Exception {
+	/**
+	 * 指定したファイル内に含まれる因果関係を抽出する関数
+	 * @param fileName ファイルのパス
+	 * @return 因果関係を保存したCausalのリスト
+	 */
+	public ArrayList<Causal> getInga(String fileName) {
 		ArrayList<Causal> causalList = new ArrayList<Causal>();
 		
 		// 一つ前の文
@@ -481,6 +488,7 @@ public class CausalExtraction {
 		int count = 1;
 		for (String sentence : lines) {
 			HashMap<String, Integer> clueHash = this.getIncludingClues(sentence, this.clueHash);
+			ArrayList<POS> caboList = null;
 			
 			// 手がかり表現ごとに原因・結果表現を抽出する
 			for (String clue : this.clueList) {
@@ -495,7 +503,14 @@ public class CausalExtraction {
 				}
 				
 				// 係り受け解析を行う
-				ArrayList<POS> caboList = this.parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+				if (caboList == null) {
+					try {
+						caboList = this.parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+					} catch (IOException | InterruptedException e) {
+						e.printStackTrace();
+						continue;
+					}
+				}
 				
 				// 核文節を得る
 				Integer[] coreIds = this.getCoreIds(caboList, clue);
