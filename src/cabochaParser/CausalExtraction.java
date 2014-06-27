@@ -9,6 +9,9 @@ import cabochaParser.CabochaParser.*;
 
 public class CausalExtraction {
 
+	// CabochaParser
+	private CabochaParser parser = new CabochaParser();
+	
 	// 手がかり表現のリスト
 	private String[] clueList;
 
@@ -405,15 +408,15 @@ public class CausalExtraction {
 	 * @param clue 手がかり表現
 	 * @param coreId 核文節のID
 	 * @param sentence 手がかり表現を含む文
-	 * @param beforeSentece 一つ前の文
+	 * @param beforeSentence 一つ前の文
 	 * @return Causalインスタンス(原因・結果表現、結果表現の主部、Pattern)
 	 */
-	public Causal getCausalExpression(ArrayList<POS> caboList, String clue, int coreId, String sentence, String beforeSentece) {
+	public Causal getCausalExpression(ArrayList<POS> caboList, String clue, int coreId, String sentence, String beforeSentence) {
 		Causal causal = new Causal();
 		int chunkId = caboList.get(coreId).chunk;
 
 		if (Arrays.asList(this.eclueList).contains(clue)) {
-			causal.basis = beforeSentece;
+			causal.basis = beforeSentence;
 		} else {
 			causal.basis = this.getBasis(caboList, clue, coreId);
 		}
@@ -451,7 +454,7 @@ public class CausalExtraction {
 		} else {
 			int cNum = this.getPatternCFlag(caboList, coreId);
 			if (cNum == -1) {
-				causal.result = beforeSentece;
+				causal.result = beforeSentence;
 				causal.pattern = "D";
 			} else {
 				causal.result = this.getKotoResult(caboList, cNum);
@@ -461,4 +464,57 @@ public class CausalExtraction {
 		return causal;
 	}
 
+	public ArrayList<Causal> getInga(String fileName) throws Exception {
+		ArrayList<Causal> causalList = new ArrayList<Causal>();
+		
+		// 一つ前の文
+		String beforeSentence = "";
+		
+		// 文のリストを得る
+		String[] lines = FileUtilities.readLines(fileName);
+		
+		// 因果関係の抽出
+		int count = 1;
+		for (String sentence : lines) {
+			HashMap<String, Integer> clueHash = this.getIncludingClues(sentence, this.clueHash);
+			
+			// 手がかり表現ごとに原因・結果表現を抽出する
+			for (String clue : this.clueList) {
+				// 手がかり表現の状態によっては処理をスキップ
+				if (!StringUtilities.in(clue, sentence) ||
+					(clue.equals("による。") && StringUtilities.in("ところによる。", sentence)) ||
+					StringUtilities.in(clue + "いる", sentence) ||
+					StringUtilities.in(clue + "いた", sentence) ||
+					clueHash.get(clue) == 1
+				) {
+					continue;
+				}
+				
+				// 係り受け解析を行う
+				ArrayList<POS> caboList = this.parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+				
+				// 核文節を得る
+				Integer[] coreIds = this.getCoreIds(caboList, clue);
+				
+				// 同一手がかり表現が同じ文に複数ある場合の対処
+				for (int coreId : coreIds) {
+					Causal causal = this.getCausalExpression(caboList, clue, coreId, sentence, beforeSentence);
+					// 因果関係が抽出できなかった場合
+					if (causal.basis.equals("") || causal.result.equals("")) {
+						continue;
+					}
+					causal.clue = clue;
+					causal.sentence = sentence;
+					causal.filePath = fileName;
+					causal.line = count;
+					causalList.add(causal);
+				}
+			}
+			count++;
+			beforeSentence = sentence;
+		}
+		
+		return causalList;
+	}
+	
 }

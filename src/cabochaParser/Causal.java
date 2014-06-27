@@ -7,7 +7,8 @@ public class Causal {
 	String subj = "";
 	String pattern = "";
 	String clue = "";
-	String articleId = "";
+	String filePath = "";
+	int line;
 	String sentence ="";
 
 	public Causal() {
