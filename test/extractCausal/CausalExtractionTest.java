@@ -1,14 +1,20 @@
-package cabochaParser;
+package extractCausal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Test;
 
+import utilities.StringUtilities;
+import cabochaParser.CabochaParser;
+import cabochaParser.ExecCabocha;
 import cabochaParser.CabochaParser.*;
+import extractCausal.Causal;
+import extractCausal.CausalExtraction;
 
 public class CausalExtractionTest {
 

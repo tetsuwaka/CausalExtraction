@@ -1,4 +1,4 @@
-package cabochaParser;
+package utilities;
 
 import java.io.*;
 import java.util.ArrayList;

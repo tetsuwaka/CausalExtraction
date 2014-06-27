@@ -1,4 +1,4 @@
-package cabochaParser;
+package utilities;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import org.junit.Test;
+
+import utilities.Reversed;
 
 public class ReversedTest {
 

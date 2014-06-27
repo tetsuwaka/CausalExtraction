@@ -3,6 +3,7 @@ package cabochaParser;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import utilities.StringUtilities;
 import cabochaParser.CabochaParser.POS;
 
 public class parserTest {

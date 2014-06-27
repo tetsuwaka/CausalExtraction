@@ -1,11 +1,15 @@
-package cabochaParser;
+package extractCausal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.*;
-
-import cabochaParser.CabochaParser.*;
+import utilities.FileUtilities;
+import utilities.Reversed;
+import utilities.StringUtilities;
+import cabochaParser.*;
+import cabochaParser.CabochaParser.Morph;
+import cabochaParser.CabochaParser.POS;
 
 public class CausalExtraction {
 

@@ -1,4 +1,4 @@
-package cabochaParser;
+package utilities;
 
 import java.util.Iterator;
 import java.util.List;

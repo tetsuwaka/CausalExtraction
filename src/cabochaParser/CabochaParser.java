@@ -9,7 +9,7 @@ public class CabochaParser {
 	 * @param cabochaResult cabochaの結果
 	 * @return カボリスト（cabochaの結果をパースしたもの）
 	 */
-	ArrayList<POS> parse(String cabochaResult) {
+	public ArrayList<POS> parse(String cabochaResult) {
 		ArrayList<POS> cabochaList = new ArrayList<POS>(); 
 
 		String lines[] = cabochaResult.split("\n");
@@ -46,14 +46,14 @@ public class CabochaParser {
 		return cabochaList;
 	}
 
-	class POS {
+	public class POS {
 		public int id;
 		public int chunk;
 		public ArrayList<String> str = new ArrayList<String>(5);
 		public ArrayList<Morph> morph = new ArrayList<Morph>(5);
 	}
 
-	class Morph {
+	public class Morph {
 		public String face;
 		public String base;
 		public String pos;
