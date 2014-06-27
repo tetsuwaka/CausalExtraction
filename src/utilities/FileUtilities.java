@@ -22,9 +22,9 @@ public class FileUtilities {
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(e);
+			System.err.println(e);
 		} catch (IOException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 
 		// ArrayListからString[]に変換してから、返す
@@ -52,9 +52,9 @@ public class FileUtilities {
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(e);
+			System.err.println(e);
 		} catch (IOException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 
 		// ArrayListからString[]に変換してから、返す
