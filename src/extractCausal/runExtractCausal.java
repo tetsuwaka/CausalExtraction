@@ -14,8 +14,6 @@ import utilities.FileUtilities;
 public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private String fileName;
 	static boolean flag = false;
-	private String[] demonList = FileUtilities.readLines("demonstrative_list.txt");
-	private ArrayList<String[]> clueList = FileUtilities.readClueList("clue_list.txt");
 
 	public runExtractCausal(String fileName) {
 		super();
@@ -24,7 +22,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	
 	@Override
 	public ArrayList<Causal> call() throws Exception {
-		CausalExtraction ce = new CausalExtraction(this.clueList, this.demonList);
+		CausalExtraction ce = new CausalExtraction();
 		return ce.getInga(this.fileName);
 	}
 	
@@ -50,6 +48,10 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 			threadNum = Integer.parseInt(args[1]);
 		}
 
+		// 手がかり表現と指示詞リストの読み込み
+		CausalExtraction.setDemonList(FileUtilities.readLines("demonstrative_list.txt"));
+		CausalExtraction.setClueList(FileUtilities.readClueList("clue_list.txt"));
+		
 		String[] files = FileUtilities.readLines(filePath);
 		ExecutorService ex = Executors.newFixedThreadPool(threadNum);
 		CompletionService<ArrayList<Causal>> completion = new ExecutorCompletionService<ArrayList<Causal>>(ex);

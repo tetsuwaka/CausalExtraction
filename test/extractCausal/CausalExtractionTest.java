@@ -2,13 +2,11 @@ package extractCausal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.junit.Test;
-
+import utilities.FileUtilities;
 import utilities.StringUtilities;
 import cabochaParser.CabochaParser;
 import cabochaParser.ExecCabocha;
@@ -17,9 +15,12 @@ import extractCausal.Causal;
 import extractCausal.CausalExtraction;
 
 public class CausalExtractionTest {
-
-	CausalExtraction ce = new CausalExtraction();
+	String[] demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
+	ArrayList<String[]> clueList = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
+	
+	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
+
 
 	@Test
 	public void testRemoveKoto() {

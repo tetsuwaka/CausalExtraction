@@ -18,13 +18,13 @@ public class CausalExtraction {
 	private CabochaParser parser = new CabochaParser();
 	
 	// 手がかり表現のリスト
-	private String[] clueList;
+	static private String[] clueList;
 
 	// Pattern Eの手がかり表現のリスト
-	private String[] eclueList;
+	static private String[] eclueList;
 
 	// 指示詞のリスト
-	private String[] demonList;
+	static private String[] demonList;
 	
 	// 手がかり表現かぶり判定HashMap
 	public HashMap<String, ArrayList<String>> clueHash;
@@ -38,18 +38,13 @@ public class CausalExtraction {
 
 	public CausalExtraction() {
 		super();
-		ArrayList<String[]> temp = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
-		this.clueList = temp.get(0);
-		this.eclueList = temp.get(1);
-		this.demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
 		this.clueHash = this.makeIncludingCluse();
 	}
 	
 	public CausalExtraction(ArrayList<String[]> clueList, String[] demoList) {
 		super();
-		this.clueList = clueList.get(0);
-		this.eclueList = clueList.get(1);
-		this.demonList = demoList;
+		CausalExtraction.setClueList(clueList);
+		CausalExtraction.setDemonList(demoList);
 		this.clueHash = this.makeIncludingCluse();
 	}
 	
@@ -58,10 +53,10 @@ public class CausalExtraction {
 	 * @return 手がかり表現のかぶり判定HashMap
 	 */
 	public HashMap<String, ArrayList<String>> makeIncludingCluse() {
-		HashMap<String, ArrayList<String>> clueHash = new HashMap<String, ArrayList<String>>(this.clueList.length);
-		for (String clue1 : this.clueList) {
+		HashMap<String, ArrayList<String>> clueHash = new HashMap<String, ArrayList<String>>(CausalExtraction.clueList.length);
+		for (String clue1 : CausalExtraction.clueList) {
 			clueHash.put(clue1, new ArrayList<String>());
-			for (String clue2 : this.clueList) {
+			for (String clue2 : CausalExtraction.clueList) {
 				if (!clue1.equals(clue2) && StringUtilities.in(clue1, clue2)) {
 					clueHash.get(clue1).add(clue2);
 				}
@@ -86,7 +81,7 @@ public class CausalExtraction {
 	 * @return 含まれているばTrue, いなければFalse
 	 */
 	public boolean includeDemon(String sentence) {
-		for (String demon : this.demonList) {
+		for (String demon : CausalExtraction.demonList) {
 			if (sentence.startsWith(demon)) {
 				return true;
 			}
@@ -420,7 +415,7 @@ public class CausalExtraction {
 		Causal causal = new Causal();
 		int chunkId = caboList.get(coreId).chunk;
 
-		if (Arrays.asList(this.eclueList).contains(clue)) {
+		if (Arrays.asList(CausalExtraction.eclueList).contains(clue)) {
 			causal.basis = beforeSentence;
 		} else {
 			causal.basis = this.getBasis(caboList, clue, coreId);
@@ -432,7 +427,7 @@ public class CausalExtraction {
 		}
 		
 		// Pattern Eの場合
-		if (Arrays.asList(this.eclueList).contains(clue)) {
+		if (Arrays.asList(CausalExtraction.eclueList).contains(clue)) {
 			causal.result = sentence.replaceAll(clue, "");
 			causal.pattern = "E";
 
@@ -490,7 +485,7 @@ public class CausalExtraction {
 			ArrayList<POS> caboList = null;
 			
 			// 手がかり表現ごとに原因・結果表現を抽出する
-			for (String clue : this.clueList) {
+			for (String clue : CausalExtraction.clueList) {
 				// 手がかり表現の状態によっては処理をスキップ
 				if (!StringUtilities.in(clue, sentence) ||
 					(clue.equals("による。") && StringUtilities.in("ところによる。", sentence)) ||
@@ -533,6 +528,15 @@ public class CausalExtraction {
 		}
 		
 		return causalList;
+	}
+
+	public static void setClueList(ArrayList<String[]> clueList) {
+		CausalExtraction.clueList = clueList.get(0);
+		CausalExtraction.eclueList = clueList.get(1);
+	}
+
+	public static void setDemonList(String[] demonList) {
+		CausalExtraction.demonList = demonList;
 	}
 	
 }
