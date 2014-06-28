@@ -26,6 +26,10 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		return ce.getInga(this.fileName);
 	}
 	
+	/**
+	 * JSON形式の出力を行う(同期的に)
+	 * @param causalList カボリスト
+	 */
 	public static synchronized void printJson(ArrayList<Causal> causalList) {
 		for (Causal causal : causalList) {
 			if (!flag) {

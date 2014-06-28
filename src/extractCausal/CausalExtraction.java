@@ -530,11 +530,19 @@ public class CausalExtraction {
 		return causalList;
 	}
 
+	/**
+	 * clueListとeclueListのセッター
+	 * @param clueList clueListとeclueListの入ったArrayList
+	 */
 	public static void setClueList(ArrayList<String[]> clueList) {
 		CausalExtraction.clueList = clueList.get(0);
 		CausalExtraction.eclueList = clueList.get(1);
 	}
 
+	/**
+	 * demonListのセッター
+	 * @param demonList 指示詞のリスト
+	 */
 	public static void setDemonList(String[] demonList) {
 		CausalExtraction.demonList = demonList;
 	}
