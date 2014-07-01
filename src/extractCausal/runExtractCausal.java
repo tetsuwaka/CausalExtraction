@@ -9,11 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import utilities.FileUtilities;
 
 public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private String fileName;
 	static boolean flag = false;
+	private static int threadNum = 2;
+	private static String filePath = null;
 
 	public runExtractCausal(String fileName) {
 		super();
@@ -42,16 +50,52 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		}
 	}
 	
-	public static void main(String[] args) {
-		int threadNum = 2;
-		if (args.length != 1 && args.length != 2) {
-			System.err.println("ファイル一覧のパスを指定してください。");
-		}
-		String filePath = args[0];
-		if (args.length == 2) {
-			threadNum = Integer.parseInt(args[1]);
-		}
+	/**
+	 * コマンドライン引数を処理して、変数をセットする
+	 * @param args コマンドライン引数
+	 */
+	private static void setArgs(String[] args) {
+		Options opts = new Options();
+		opts.addOption("t", "threadNum", true, "Thread Number");
+		opts.addOption("h", "help", false, "show help");
+		BasicParser parser = new BasicParser();
+		CommandLine cl;
+		HelpFormatter help = new HelpFormatter();
 
+		try {
+			cl = parser.parse(opts, args);
+			if (cl.hasOption("t")) {
+				try {
+					threadNum = Integer.parseInt(cl.getOptionValue("t"));
+				} catch (NumberFormatException e) {
+					help.printHelp("extractCausal [options] [file]", opts);
+					System.exit(1);
+				}
+				if (threadNum <= 0) {
+					help.printHelp("extractCausal [options] [file]", opts);
+					System.exit(1);
+				}
+			}
+			if (cl.hasOption("h")) {
+				help.printHelp("extractCausal [options] [file]", opts);
+				System.exit(1);
+			}
+			
+			if (cl.getArgs().length != 1) {
+				help.printHelp("extractCausal [options] [file]", opts);
+				System.exit(1);
+			}
+			filePath = cl.getArgs()[0];
+		} catch (ParseException e1) {
+			help.printHelp("extractCausal [options] [file]", opts);
+			System.exit(1);
+		}
+	}
+	
+	public static void main(String[] args) {
+		// コマンドライン引数の処理
+		setArgs(args);
+		
 		// 手がかり表現と指示詞リストの読み込み
 		CausalExtraction.setDemonList(FileUtilities.readLines("demonstrative_list.txt"));
 		CausalExtraction.setClueList(FileUtilities.readClueList("clue_list.txt"));
