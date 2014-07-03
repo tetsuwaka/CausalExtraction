@@ -17,11 +17,29 @@ import extractCausal.CausalExtraction;
 public class CausalExtractionTest {
 	String[] demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
 	ArrayList<String[]> clueList = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
+	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("src/extractCausal/additional_data.txt");
 	
 	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
 
 
+	@Test
+	public void testRemovePattern() {
+		CausalExtraction.addClueList(this.additionalData.get(0));
+		CausalExtraction.setPrefixPatternList(this.additionalData.get(1));
+		assertThat("ほげほげのため", is(this.ce.removePattern("これは、ほげほげのため")));
+		assertThat("ほげほげのため、これは、", is(this.ce.removePattern("ほげほげのため、これは、")));
+		assertThat("ほげほげのため", is(this.ce.removePattern("増加要因はほげほげのため")));
+	}
+	
+	@Test
+	public void testHavePattern() {
+		CausalExtraction.setPrefixPatternList(this.additionalData.get(1));
+		assertThat(true, is(this.ce.havePattern("これは、ほげほげのため")));
+		assertThat(false, is(this.ce.havePattern("ほげほげのため、これは、")));
+		assertThat(true, is(this.ce.havePattern("増加要因はほげほげのため")));
+	}
+	
 	@Test
 	public void testRemoveKoto() {
 		String str;
@@ -258,6 +276,40 @@ public class CausalExtractionTest {
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
 		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "");
 		seikai = new Causal("下半期では、上半期に導入を予定していながら諸事情により計画が遅れた案件の成約が見込めます", "売上高に関しましては上半期の不足を補い、期初の通期予想を達成する", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+		
+		CausalExtraction.patternFlag = true;
+		clue = "によります。";
+		sentence = "これは主に短期借入金が６３億５１百万円増加し、未払法人税等が１億６８百万円、流動負債の「その他」に含まれる設備支払手形が１０億２０百万円減少したこと等によります。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
+		seikai = new Causal("主に短期借入金が６３億５１百万円増加し、未払法人税等が１億６８百万円、流動負債の「その他」に含まれる設備支払手形が１０億２０百万円減少した", "TTT", "", "D");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+		
+		CausalExtraction.patternFlag = true;
+		clue = "によるものであります。";
+		sentence = "その主な要因は、当期純利益の影響により利益剰余金が４１０，５２０千円増加したものの、剰余金の配当により利益剰余金が２１２，１５５千円減少したことによるものであります。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
+		seikai = new Causal("剰余金の配当により利益剰余金が２１２，１５５千円減少した", "TTT", "", "D");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+		
+		// Prefixを適用しない場合: Pattern Cに適用される
+		CausalExtraction.patternFlag = false;
+		clue = "によるものであります。";
+		sentence = "その主な要因は、当期純利益の影響により利益剰余金が４１０，５２０千円増加したものの、剰余金の配当により利益剰余金が２１２，１５５千円減少したことによるものであります。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
+		seikai = new Causal("剰余金の配当により利益剰余金が２１２，１５５千円減少した", "その主な要因は、", "", "C");
 		assertThat(seikai.basis, is(causal.basis));
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));

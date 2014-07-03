@@ -21,6 +21,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private String fileName;
 	static boolean flag = false;
 	private static int threadNum = 2;
+	private static boolean patternFlag = false;
 	private static String filePath = null;
 
 	public runExtractCausal(String fileName) {
@@ -57,6 +58,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private static void setArgs(String[] args) {
 		Options opts = new Options();
 		opts.addOption("t", "threadNum", true, "Thread Number");
+		opts.addOption("p", "pattern", false, "use Prefix Pattern");
 		opts.addOption("h", "help", false, "show help");
 		BasicParser parser = new BasicParser();
 		CommandLine cl;
@@ -80,6 +82,9 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 				help.printHelp("extractCausal [options] [file]", opts);
 				System.exit(1);
 			}
+			if (cl.hasOption("p")) {
+				patternFlag = true;
+			}
 			
 			if (cl.getArgs().length != 1) {
 				help.printHelp("extractCausal [options] [file]", opts);
@@ -100,6 +105,11 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		CausalExtraction.setDemonList(FileUtilities.readLines("demonstrative_list.txt"));
 		CausalExtraction.setClueList(FileUtilities.readClueList("clue_list.txt"));
 		
+		// PrefixPatternを使うようにしてあれば
+		if (patternFlag) {
+			CausalExtraction.setAdditionalData(FileUtilities.readAdditionalData("additional_data.txt"));
+		}
+
 		String[] files = FileUtilities.readLines(filePath);
 		ExecutorService ex = Executors.newFixedThreadPool(threadNum);
 		CompletionService<ArrayList<Causal>> completion = new ExecutorCompletionService<ArrayList<Causal>>(ex);

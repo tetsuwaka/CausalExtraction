@@ -17,6 +17,9 @@ public class FileUtilities {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str = br.readLine();
 			while (str != null) {
+				if (str.equals("")) {
+					continue;
+				}
 				strings.add(str);
 				str = br.readLine();
 			}
@@ -43,6 +46,9 @@ public class FileUtilities {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str = br.readLine();
 			while (str != null) {
+				if (str.equals("")) {
+					continue;
+				}
 				String[] temp = str.split("]");
 				strings.add(temp[1]);
 				if (str.startsWith("[E]")) {
@@ -63,6 +69,45 @@ public class FileUtilities {
 		ArrayList<String[]> result = new ArrayList<String[]>(2);
 		result.add(clues);
 		result.add(eclues);
+		return result;
+	}
+	
+	/**
+	 * 手がかり表現とPrefixPatternのリストをファイルから読み取って返す関数
+	 * @return 手がかり表現とPrefixPatternのリスト
+	 */
+	static public ArrayList<String[]> readAdditionalData(String filePath) {
+		ArrayList<String> clues = new ArrayList<String>();
+		ArrayList<String> patterns = new ArrayList<String>();
+		try {
+			File file = new File(filePath);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String str = br.readLine();
+			while (str != null) {
+				if (str.equals("")) {
+					continue;
+				}
+				String[] temp = str.split("]");
+				if (str.startsWith("[clue]")) {
+					clues.add(temp[1]);
+				} else if (str.startsWith("[pattern]")) {
+					patterns.add(temp[1]);
+				}
+				str = br.readLine();
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			System.err.println(e);
+		} catch (IOException e) {
+			System.err.println(e);
+		}
+
+		// ArrayListからString[]に変換してから、返す
+		String[] clueList = (String[])clues.toArray(new String[clues.size()]);
+		String[] patternList = (String[])patterns.toArray(new String[patterns.size()]);
+		ArrayList<String[]> result = new ArrayList<String[]>(2);
+		result.add(clueList);
+		result.add(patternList);
 		return result;
 	}
 }

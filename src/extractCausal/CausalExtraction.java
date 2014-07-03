@@ -26,6 +26,12 @@ public class CausalExtraction {
 	// 指示詞のリスト
 	static private String[] demonList;
 	
+	// PrefixPatternのリスト
+	static private String[] prefixPatternList;
+	
+	// PrefixPatternを適用するか否かのフラグ
+	static public boolean patternFlag = false;
+
 	// 手がかり表現かぶり判定HashMap
 	public HashMap<String, ArrayList<String>> clueHash;
 
@@ -34,6 +40,9 @@ public class CausalExtraction {
 
 	// 文字列に不要な文字が含まれているかを調べる正規表現
 	private Pattern pGomi = Pattern.compile("、|の");
+	
+	// 文字列の先頭に読点があるか調べる正規表現
+	private Pattern pComma = Pattern.compile("^、");
 
 
 	public CausalExtraction() {
@@ -63,6 +72,37 @@ public class CausalExtraction {
 			}
 		}
 		return clueHash;
+	}
+	
+	/**
+	 * 文字列の先頭からPrefixPatternを削除する
+	 * @param str 入力文字列
+	 * @return PrefixPatternを削除した文字列
+	 */
+	public String removePattern(String str) {
+		for (String pattern : CausalExtraction.prefixPatternList) {
+			if (str.startsWith(pattern)) {
+				Pattern p = Pattern.compile("^" + pattern);
+				str = p.matcher(str).replaceFirst("");
+				str = this.pComma.matcher(str).replaceFirst("");
+				break;
+			}
+		}
+		return str;
+	}
+	
+	/**
+	 * PrefixPatternが含まれていればtrue, いなければfalseを返す
+	 * @param sentence 文
+	 * @return PrefixPatternが含まれていればtrue, いなければfalse
+	 */
+	public boolean havePattern(String sentence) {
+		for (String pattern : CausalExtraction.prefixPatternList) {
+			if (sentence.startsWith(pattern)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -450,6 +490,12 @@ public class CausalExtraction {
 			// Patternの判定
 			causal.pattern = causal.subj.equals("") ? "A" : "B";
 
+		// Prefix Patternの場合
+		} else if (patternFlag && this.havePattern(sentence)) {
+			causal.basis = this.removePattern(causal.basis);
+			causal.result = beforeSentence;
+			causal.pattern = "D";
+			
 		// Pattern CとDの場合
 		} else {
 			int cNum = this.getPatternCFlag(caboList, coreId);
@@ -531,6 +577,16 @@ public class CausalExtraction {
 	}
 
 	/**
+	 * PrefixPatternと追加手がかり表現を使用するようにセットする
+	 * @param datum PrefixPatternと追加手がかり表現のリスト
+	 */
+	public static void setAdditionalData(ArrayList<String[]> datum) {
+		CausalExtraction.addClueList(datum.get(0));
+		CausalExtraction.setPrefixPatternList(datum.get(1));
+		CausalExtraction.patternFlag = true;
+	}
+	
+	/**
 	 * clueListとeclueListのセッター
 	 * @param clueList clueListとeclueListの入ったArrayList
 	 */
@@ -538,13 +594,32 @@ public class CausalExtraction {
 		CausalExtraction.clueList = clueList.get(0);
 		CausalExtraction.eclueList = clueList.get(1);
 	}
+	
+	/**
+	 * clueListに新たな手がかり表現の配列を加える
+	 * @param addList 新たな手がかり表現の配列
+	 */
+	public static void addClueList(String[] addList) {
+		String[] temp = new String[CausalExtraction.clueList.length + addList.length];
+		System.arraycopy(CausalExtraction.clueList, 0, temp, 0, CausalExtraction.clueList.length);
+		System.arraycopy(addList, 0, temp, CausalExtraction.clueList.length, addList.length);
+		CausalExtraction.clueList = temp;	
+	}
 
 	/**
 	 * demonListのセッター
-	 * @param demonList 指示詞のリスト
+	 * @param demonList 指示詞の配列
 	 */
 	public static void setDemonList(String[] demonList) {
 		CausalExtraction.demonList = demonList;
+	}
+	
+	/**
+	 * PrefixPatternのセッター
+	 * @param prefixPatternList PrefixPatternの配列
+	 */
+	public static void setPrefixPatternList(String[] prefixPatternList) {
+		CausalExtraction.prefixPatternList = prefixPatternList;
 	}
 	
 }
