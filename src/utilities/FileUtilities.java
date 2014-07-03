@@ -2,6 +2,7 @@ package utilities;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileUtilities {
 
@@ -109,5 +110,35 @@ public class FileUtilities {
 		result.add(clueList);
 		result.add(patternList);
 		return result;
+	}
+
+
+	/**
+	 * SVMの結果を読み込む
+	 * @param filePath SVM結果ファイルのファイルパス
+	 * @return SVM結果のハッシュ
+	 */
+	static public HashMap<String, Integer> readSvmResults(String filePath) {
+		HashMap<String, Integer> svmHash = new HashMap<String, Integer>();
+		try {
+			File file = new File(filePath);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String str = br.readLine();
+			while (str != null) {
+				if (str.equals("")) {
+					continue;
+				}
+				String[] temp = str.split("\t");
+				svmHash.put(temp[1], Integer.parseInt(temp[0]));
+				str = br.readLine();
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			System.err.println(e);
+		} catch (IOException e) {
+			System.err.println(e);
+		}
+
+		return svmHash;
 	}
 }

@@ -31,6 +31,12 @@ public class CausalExtraction {
 	
 	// PrefixPatternを適用するか否かのフラグ
 	static public boolean patternFlag = false;
+	
+	// SVMの結果を利用するハッシュ
+	static private HashMap<String, Integer> svmHash;
+	
+	// SVMの結果を適用するか否かのフラグ
+	static public boolean svmFlag = false;
 
 	// 手がかり表現かぶり判定HashMap
 	public HashMap<String, ArrayList<String>> clueHash;
@@ -527,6 +533,16 @@ public class CausalExtraction {
 		// 因果関係の抽出
 		int count = 1;
 		for (String sentence : lines) {
+			// SVMの結果があれば使う
+			if (CausalExtraction.svmFlag) {
+				String key = fileName + "::" + count;
+				if (!CausalExtraction.svmHash.containsKey(key) || CausalExtraction.svmHash.get(key) == 0) {
+					beforeSentence = sentence;
+					count++;
+					continue;
+				}
+			}
+			
 			HashMap<String, Integer> clueHash = this.getIncludingClues(sentence, this.clueHash);
 			ArrayList<POS> caboList = null;
 			
@@ -620,6 +636,14 @@ public class CausalExtraction {
 	 */
 	public static void setPrefixPatternList(String[] prefixPatternList) {
 		CausalExtraction.prefixPatternList = prefixPatternList;
+	}
+	
+	/**
+	 * svmHashのセッター
+	 * @param svmHash svmの結果のハッシュ
+	 */
+	public static void setSvmHash(HashMap<String, Integer> svmHash) {
+		CausalExtraction.svmHash = svmHash;
 	}
 	
 }

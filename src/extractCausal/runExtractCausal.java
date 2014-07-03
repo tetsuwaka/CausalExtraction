@@ -58,7 +58,8 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private static void setArgs(String[] args) {
 		Options opts = new Options();
 		opts.addOption("t", "threadNum", true, "Thread Number");
-		opts.addOption("p", "pattern", false, "use Prefix Pattern");
+		opts.addOption("p", "pattern", false, "use Prefix Patterns");
+		opts.addOption("s", "svm", true, "use SVM results");
 		opts.addOption("h", "help", false, "show help");
 		BasicParser parser = new BasicParser();
 		CommandLine cl;
@@ -81,6 +82,10 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 			if (cl.hasOption("h")) {
 				help.printHelp("extractCausal [options] [file]", opts);
 				System.exit(1);
+			}
+			if (cl.hasOption("s")) {
+				CausalExtraction.setSvmHash(FileUtilities.readSvmResults(cl.getOptionValue("s")));
+				CausalExtraction.svmFlag = true;
 			}
 			if (cl.hasOption("p")) {
 				patternFlag = true;

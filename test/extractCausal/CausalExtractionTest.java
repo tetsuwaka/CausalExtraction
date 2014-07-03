@@ -18,6 +18,7 @@ public class CausalExtractionTest {
 	String[] demonList = FileUtilities.readLines("src/extractCausal/demonstrative_list.txt");
 	ArrayList<String[]> clueList = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
 	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("src/extractCausal/additional_data.txt");
+	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("src/extractCausal/svm_result.txt");
 	
 	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
@@ -332,6 +333,13 @@ public class CausalExtractionTest {
 		assertThat(1, is(causalList.get(0).line));
 		assertThat("src/extractCausal/test1.txt", is(causalList.get(0).filePath));
 		assertThat("製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", is(causalList.get(0).sentence));
+	
+		CausalExtraction.svmFlag = true;
+		CausalExtraction.setSvmHash(this.svmHash);
+		causalList = this.ce.getInga("src/extractCausal/test1.txt");
+		assertThat(2, is(causalList.size()));
+		causalList = this.ce.getInga("src/extractCausal/test2.txt");
+		assertThat(2, is(causalList.size()));
 	}
 
 }
