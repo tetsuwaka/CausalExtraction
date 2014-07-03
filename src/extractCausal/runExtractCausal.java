@@ -22,6 +22,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	static boolean flag = false;
 	private static int threadNum = 2;
 	private static boolean patternFlag = false;
+	private static String patternFilePath;
 	private static String filePath = null;
 
 	public runExtractCausal(String fileName) {
@@ -58,7 +59,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private static void setArgs(String[] args) {
 		Options opts = new Options();
 		opts.addOption("t", "threadNum", true, "Thread Number");
-		opts.addOption("p", "pattern", false, "use Prefix Patterns");
+		opts.addOption("p", "pattern", true, "use Prefix Patterns");
 		opts.addOption("s", "svm", true, "use SVM results");
 		opts.addOption("h", "help", false, "show help");
 		BasicParser parser = new BasicParser();
@@ -88,6 +89,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 				CausalExtraction.svmFlag = true;
 			}
 			if (cl.hasOption("p")) {
+				patternFilePath = cl.getOptionValue("p");
 				patternFlag = true;
 			}
 			
@@ -112,7 +114,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		
 		// PrefixPatternを使うようにしてあれば
 		if (patternFlag) {
-			CausalExtraction.setAdditionalData(FileUtilities.readAdditionalData("additional_data.txt"));
+			CausalExtraction.setAdditionalData(FileUtilities.readAdditionalData(patternFilePath));
 		}
 
 		String[] files = FileUtilities.readLines(filePath);
