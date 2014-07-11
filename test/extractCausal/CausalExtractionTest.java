@@ -340,6 +340,10 @@ public class CausalExtractionTest {
 		assertThat(2, is(causalList.size()));
 		causalList = this.ce.getInga("src/extractCausal/test2.txt");
 		assertThat(2, is(causalList.size()));
+		
+		CausalExtraction.svmFlag = false;
+		causalList = this.ce.getInga("src/extractCausal/tanshin2010.txt");
+		assertThat(69, is(causalList.size()));
 	}
 
 }

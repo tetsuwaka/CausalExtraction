@@ -479,18 +479,23 @@ public class CausalExtraction {
 
 		// Pattern AとBの場合
 		} else if (!clue.endsWith("。") && !sentence.endsWith(clue + "。")) {
-			Morph lastMorph = caboList.get(chunkId).morph.get(caboList.get(chunkId).morph.size() - 1);
-			Morph firstMorph = caboList.get(chunkId).morph.get(0);
-			if (lastMorph.pos.equals("動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
-				causal.result = this.getResultVP(caboList, clue, coreId);
-				causal.subj = this.getSubj(caboList, coreId);
-			} else if (firstMorph.posd.equals("非自立")) {
-				causal.result = this.getResultVP(caboList, clue, coreId);
-				causal.result = StringUtilities.remove(causal.result, StringUtilities.join("", caboList.get(chunkId).str) + "$");
-			} else if (firstMorph.pos.equals("名詞")) {
-				causal.result = this.getResultNP(caboList, coreId);
-			} else if (firstMorph.pos.equals("形容詞")) {
-				causal.result = this.getResultVP(caboList, clue, coreId);
+			// 手がかり表現が正常な位置にない場合
+			try {
+				Morph lastMorph = caboList.get(chunkId).morph.get(caboList.get(chunkId).morph.size() - 1);
+				Morph firstMorph = caboList.get(chunkId).morph.get(0);
+				if (lastMorph.pos.equals("動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
+					causal.result = this.getResultVP(caboList, clue, coreId);
+					causal.subj = this.getSubj(caboList, coreId);
+				} else if (firstMorph.posd.equals("非自立")) {
+					causal.result = this.getResultVP(caboList, clue, coreId);
+					causal.result = StringUtilities.remove(causal.result, StringUtilities.join("", caboList.get(chunkId).str) + "$");
+				} else if (firstMorph.pos.equals("名詞")) {
+					causal.result = this.getResultNP(caboList, coreId);
+				} else if (firstMorph.pos.equals("形容詞")) {
+					causal.result = this.getResultVP(caboList, clue, coreId);
+				}
+			} catch (Exception e) {
+				return new Causal();
 			}
 
 			// Patternの判定
