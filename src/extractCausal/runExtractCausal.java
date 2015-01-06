@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -62,8 +60,8 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		opts.addOption("p", "pattern", true, "use Prefix Patterns");
 		opts.addOption("s", "svm", true, "use SVM results");
 		opts.addOption("h", "help", false, "show help");
-		BasicParser parser = new BasicParser();
-		CommandLine cl;
+		org.apache.commons.cli.BasicParser parser = new org.apache.commons.cli.BasicParser();
+		org.apache.commons.cli.CommandLine cl;
 		HelpFormatter help = new HelpFormatter();
 
 		try {
