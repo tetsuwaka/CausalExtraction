@@ -19,7 +19,7 @@ public class CausalExtractionTest {
 	ArrayList<String[]> clueList = FileUtilities.readClueList("src/extractCausal/clue_list.txt");
 	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("src/extractCausal/additional_data.txt");
 	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("src/extractCausal/svm_result.txt");
-	
+
 	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
 
@@ -32,7 +32,7 @@ public class CausalExtractionTest {
 		assertThat("ほげほげのため、これは、", is(this.ce.removePattern("ほげほげのため、これは、")));
 		assertThat("ほげほげのため", is(this.ce.removePattern("増加要因はほげほげのため")));
 	}
-	
+
 	@Test
 	public void testHavePattern() {
 		CausalExtraction.setPrefixPatternList(this.additionalData.get(1));
@@ -40,7 +40,7 @@ public class CausalExtractionTest {
 		assertThat(false, is(this.ce.havePattern("ほげほげのため、これは、")));
 		assertThat(true, is(this.ce.havePattern("増加要因はほげほげのため")));
 	}
-	
+
 	@Test
 	public void testRemoveKoto() {
 		String str;
@@ -193,7 +193,7 @@ public class CausalExtractionTest {
 		HashMap<String, Integer> result = this.ce.getIncludingClues(sentence, this.ce.clueHash);
 		assertThat(result.get("を背景に、"), is(0));
 		assertThat(result.get("を背景に"), is(1)); // かぶりがあったら1になる
-		
+
 		sentence = "円高を背景に景気が悪化した。";
 		result = this.ce.getIncludingClues(sentence, this.ce.clueHash);
 		assertThat(result.get("を背景に、"), is(0));
@@ -208,7 +208,7 @@ public class CausalExtractionTest {
 		Causal causal = this.ce.getCausalExpression(caboList, clue, 1, sentence, "");
 		Causal seikai = new Causal("円高", "不況になった。", "", "A");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
@@ -218,17 +218,17 @@ public class CausalExtractionTest {
 		causal = this.ce.getCausalExpression(caboList, clue, 0, sentence, "");
 		seikai = new Causal("円高", "不況の影響", "", "A");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
-		
+
 		clue = "による";
 		sentence = "この結果による不況の影響で、買い物客が激減。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
 		causal = this.ce.getCausalExpression(caboList, clue, 0, sentence, "");
 		seikai = new Causal("", "", "", "");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
@@ -238,7 +238,7 @@ public class CausalExtractionTest {
 		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "");
 		seikai = new Causal("製菓・製パン向けの販売が総じて低調に推移した", "各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", "製菓原材料類は、", "B");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
@@ -248,7 +248,7 @@ public class CausalExtractionTest {
 		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "");
 		seikai = new Causal("前期末の有価証券評価差額金が十七億円強の含み損となった", "配当原資が不足するのは、", "", "C");
 		assertThat(seikai.basis, is(causal.basis));
-		assertThat(seikai.result, is(causal.result));	
+		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
@@ -271,7 +271,7 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
-		
+
 		clue = "で、";
 		sentence = "下半期では、上半期に導入を予定していながら諸事情により計画が遅れた案件の成約が見込めますので、売上高に関しましては上半期の不足を補い、期初の通期予想を達成するものと思われますが、利益に関しましては、利益率が比較的低い低価格ツールの占める割合が増えていることが影響し若干減少する見通しです。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
@@ -281,7 +281,7 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
-		
+
 		CausalExtraction.patternFlag = true;
 		clue = "によります。";
 		sentence = "これは主に短期借入金が６３億５１百万円増加し、未払法人税等が１億６８百万円、流動負債の「その他」に含まれる設備支払手形が１０億２０百万円減少したこと等によります。";
@@ -292,7 +292,7 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
-		
+
 		CausalExtraction.patternFlag = true;
 		clue = "によるものであります。";
 		sentence = "その主な要因は、当期純利益の影響により利益剰余金が４１０，５２０千円増加したものの、剰余金の配当により利益剰余金が２１２，１５５千円減少したことによるものであります。";
@@ -303,7 +303,7 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
-		
+
 		// Prefixを適用しない場合: Pattern Cに適用される
 		CausalExtraction.patternFlag = false;
 		clue = "によるものであります。";
@@ -316,31 +316,31 @@ public class CausalExtractionTest {
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 	}
-	
+
 	@Test
 	public void testGetInga() throws Exception {
 		ArrayList<Causal> causalList = this.ce.getInga("src/extractCausal/test00.txt");
 		assertThat(causalList.size(), is(0));
-		
+
 		causalList = this.ce.getInga("src/extractCausal/test1.txt");
 		assertThat(3, is(causalList.size()));
 		Causal seikai = new Causal("製菓・製パン向けの販売が総じて低調に推移した", "各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", "製菓原材料類は、", "B");
 		assertThat(seikai.basis, is(causalList.get(0).basis));
-		assertThat(seikai.result, is(causalList.get(0).result));	
+		assertThat(seikai.result, is(causalList.get(0).result));
 		assertThat(seikai.subj, is(causalList.get(0).subj));
 		assertThat(seikai.pattern, is(causalList.get(0).pattern));
 		assertThat("から、", is(causalList.get(0).clue));
 		assertThat(1, is(causalList.get(0).line));
 		assertThat("src/extractCausal/test1.txt", is(causalList.get(0).filePath));
 		assertThat("製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", is(causalList.get(0).sentence));
-	
+
 		CausalExtraction.svmFlag = true;
 		CausalExtraction.setSvmHash(this.svmHash);
 		causalList = this.ce.getInga("src/extractCausal/test1.txt");
 		assertThat(2, is(causalList.size()));
 		causalList = this.ce.getInga("src/extractCausal/test2.txt");
 		assertThat(2, is(causalList.size()));
-		
+
 		CausalExtraction.svmFlag = false;
 		causalList = this.ce.getInga("src/extractCausal/tanshin2010.txt");
 		assertThat(69, is(causalList.size()));
