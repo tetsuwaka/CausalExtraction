@@ -309,6 +309,17 @@ public class CausalExtractionTest {
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
+		CausalExtraction.patternFlag = false;
+		clue = "により";
+		sentence = "さて当連結会計年度におけるわが国経済は、アジア・新興国を中心とした外需による生産活動の増加により企業収益も改善へと転じ、緩やかな回復基調にありましたが、円高の進行やデフレの長期化により本格的な回復には至らず、加えて東日本大震災の影響もあり、先行き不透明な状況となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[1], sentence, "");
+		seikai = new Causal("円高の進行やデフレの長期化", "本格的な回復には至らず", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+
 		// Prefixを適用しない場合: Pattern Cに適用される
 		CausalExtraction.patternFlag = false;
 		clue = "によるものであります。";
