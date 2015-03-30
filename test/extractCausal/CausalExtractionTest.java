@@ -112,6 +112,11 @@ public class CausalExtractionTest {
 		sentence = "製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
 		assertThat("各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", is(this.ce.getResultVP(caboList, clue, this.ce.getCoreIds(caboList, clue)[0])));
+
+		clue = "により";
+		sentence = "さて当連結会計年度におけるわが国経済は、アジア・新興国を中心とした外需による生産活動の増加により企業収益も改善へと転じ、緩やかな回復基調にありましたが、円高の進行やデフレの長期化により本格的な回復には至らず、加えて東日本大震災の影響もあり、先行き不透明な状況となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		assertThat("本格的な回復には至らず、加えて東日本大震災の影響もあり、先行き不透明な状況となりました。", is(this.ce.getResultVP(caboList, clue, this.ce.getCoreIds(caboList, clue)[1])));
 	}
 
 	@Test
