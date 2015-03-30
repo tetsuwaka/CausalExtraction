@@ -204,7 +204,9 @@ public class CausalExtraction {
 
 			if (pos.id == coreId) {
 				String[] temp = word.split(clue);
-				resultExpression = temp.length > 1 ? temp[temp.length - 1]  : "";
+				Integer[] cores = getCoreIds(caboList, clue); // 核文節数を得るため
+				int tempLength = temp.length - cores.length + 1; // 核文節数によって数を変更
+				resultExpression = tempLength > 1 ? temp[temp.length - 1]  : ""; // 核文節が複数存在する場合、条件を変更する
 				chunkId = pos.chunk;
 				flag = true;
 			}
