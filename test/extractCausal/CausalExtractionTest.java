@@ -320,6 +320,28 @@ public class CausalExtractionTest {
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
+		CausalExtraction.patternFlag = false;
+		clue = "により、";
+		sentence = "当家電販売業界におきましては、消費低迷に加え、冷夏などの天候不順の影響により、エアコンが低調に推移し、また、新ＯＳの発売を控えたパソコン等の情報関連商品も低調でありましたが、エコポイント制度の開始により、薄型テレビ・冷蔵庫が順調に推移しました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[1], sentence, "");
+		seikai = new Causal("エコポイント制度の開始", "薄型テレビ・冷蔵庫が順調に推移しました。", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+		
+		CausalExtraction.patternFlag = false;
+		clue = "により";
+		sentence = "【設備機器】売上高２，３８８百万円（前年同期比１１３．１％）設備機器につきましては、住宅用設備機器はオール電化ブームにより温水器が好調でしたが、冷夏の影響により家庭用エアコンは低調な推移となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[1], sentence, "");
+		seikai = new Causal("冷夏の影響", "家庭用エアコンは低調な推移となりました。", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+		
 		// Prefixを適用しない場合: Pattern Cに適用される
 		CausalExtraction.patternFlag = false;
 		clue = "によるものであります。";
