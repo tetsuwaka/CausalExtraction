@@ -6,7 +6,7 @@ Extraction of Causal Expressions using clue phrases
 * Linux or Mac
 * [CaboCha](https://code.google.com/p/cabocha/)
     * UTF-8
-* JAVA 1.8 +
+* JAVA 1.7 +
 
 
 # Usage
