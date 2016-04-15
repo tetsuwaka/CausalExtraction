@@ -24,6 +24,12 @@ Extraction of Causal Expressions using clue phrases
 ### Example 2
 `java -Xmx2G -Xmx8G -jar extractCausal.jar -t 4 -s svm_result.txt -p additional_data.txt test_list.txt`
 
+## Results
+CausalExtraction program outputs a following json.
+
+`[
+{"clue": "で、", "basis": "円高による不況の影響", "result": "買い物客が激減。", "subj": "", "pattern": "A", "filePath": "test1.txt", "line": 2}
+]`
 
 # LICENSE
 ```text
