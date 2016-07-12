@@ -1,2 +1,2 @@
-src/extractCausal/test1.txt
-src/extractCausal/test2.txt
+test1.txt
+test2.txt

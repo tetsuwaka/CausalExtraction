@@ -42,7 +42,7 @@
         </java>
     </target>
     <target name="jar" depends="build">
-        <jar destfile="${dir.jarfile}/extractCausal.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/sample/extractCausal.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="extractCausal.runExtractCausal"/>
                 <attribute name="Class-Path" value="."/>
