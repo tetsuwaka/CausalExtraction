@@ -6,15 +6,25 @@ Extraction of Causal Expressions using clue phrases
 * Linux or Mac
 * [CaboCha](https://code.google.com/p/cabocha/)
     * UTF-8
-* JAVA 1.7 +
+* JAVA 1.8 +
+* ant (for making jar file)
 
+# Install
+```
+$ ant
+$ ant jar
+```
+A jar file(extractCausal.jar) is made in the sample folder.
 
 # Usage
 ## Example
-`java -Xmx2G -Xmx8G -jar extractCausal.jar test_list.txt`
+You move to the sample folder.
+Then, run the following command.
+
+`$ java -Xmx2G -Xmx8G -jar extractCausal.jar test_list.txt`
 
 ## Argments
-* File list for extracting causal expressions 
+* File list for extracting causal expressions
 
 ## Additional Argments
 * -p, --pattern <arg>    use Prefix Patterns
@@ -22,7 +32,7 @@ Extraction of Causal Expressions using clue phrases
 * -t, --thredNum <arg>   Thread Number
 
 ### Example 2
-`java -Xmx2G -Xmx8G -jar extractCausal.jar -t 4 -s svm_result.txt -p additional_data.txt test_list.txt`
+`$ java -Xmx2G -Xmx8G -jar extractCausal.jar -t 4 -s svm_result.txt -p additional_data.txt test_list.txt`
 
 ## Results
 CausalExtraction program outputs a following json.
