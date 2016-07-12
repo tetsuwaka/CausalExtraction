@@ -1,2 +1,0 @@
-src/extractCausal/test1.txt
-src/extractCausal/test2.txt
