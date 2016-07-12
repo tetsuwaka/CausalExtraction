@@ -16,10 +16,10 @@ import utilities.FileUtilities;
 import utilities.StringUtilities;
 
 public class CausalExtractionTest {
-	String[] demonList = FileUtilities.readLines("sample/extractCausal/demonstrative_list.txt");
-	ArrayList<String[]> clueList = FileUtilities.readClueList("sample/extractCausal/clue_list.txt");
-	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("sample/extractCausal/additional_data.txt");
-	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("sample/extractCausal/svm_result.txt");
+	String[] demonList = FileUtilities.readLines("sample/demonstrative_list.txt");
+	ArrayList<String[]> clueList = FileUtilities.readClueList("sample/clue_list.txt");
+	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("sample/additional_data.txt");
+	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("sample/svm_result.txt");
 
 	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
@@ -358,10 +358,10 @@ public class CausalExtractionTest {
 
 	@Test
 	public void testGetInga() throws Exception {
-		ArrayList<Causal> causalList = this.ce.getInga("sample/extractCausal/test00.txt");
+		ArrayList<Causal> causalList = this.ce.getInga("sample/test00.txt");
 		assertThat(causalList.size(), is(0));
 
-		causalList = this.ce.getInga("sample/extractCausal/test1.txt");
+		causalList = this.ce.getInga("sample/test1.txt");
 		assertThat(3, is(causalList.size()));
 		Causal seikai = new Causal("製菓・製パン向けの販売が総じて低調に推移した", "各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", "製菓原材料類は、", "B");
 		assertThat(seikai.basis, is(causalList.get(0).basis));
@@ -370,18 +370,18 @@ public class CausalExtractionTest {
 		assertThat(seikai.pattern, is(causalList.get(0).pattern));
 		assertThat("から、", is(causalList.get(0).clue));
 		assertThat(1, is(causalList.get(0).line));
-		assertThat("sample/extractCausal/test1.txt", is(causalList.get(0).filePath));
+		assertThat("sample/test1.txt", is(causalList.get(0).filePath));
 		assertThat("製菓原材料類は、製菓・製パン向けの販売が総じて低調に推移したことから、各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", is(causalList.get(0).sentence));
 
 		CausalExtraction.svmFlag = true;
 		CausalExtraction.setSvmHash(this.svmHash);
-		causalList = this.ce.getInga("sample/extractCausal/test1.txt");
+		causalList = this.ce.getInga("sample/test1.txt");
 		assertThat(2, is(causalList.size()));
-		causalList = this.ce.getInga("sample/extractCausal/test2.txt");
+		causalList = this.ce.getInga("sample/test2.txt");
 		assertThat(2, is(causalList.size()));
 
 		CausalExtraction.svmFlag = false;
-		causalList = this.ce.getInga("sample/extractCausal/tanshin2010.txt");
+		causalList = this.ce.getInga("sample/tanshin2010.txt");
 		assertThat(69, is(causalList.size()));
 	}
 
