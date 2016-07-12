@@ -1,0 +1,6 @@
+1	src/extractCausal/test1.txt::1
+0	src/extractCausal/test1.txt::2
+1	src/extractCausal/test1.txt::4
+1	src/extractCausal/test2.txt::2
+0	src/extractCausal/test2.txt::5
+1	src/extractCausal/test2.txt::4
