@@ -123,7 +123,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		}
 		
 		ex.shutdown();
-		
+
 		System.out.println("[");
 		for (int i = 0; i < files.length; i++) {
 			try {
