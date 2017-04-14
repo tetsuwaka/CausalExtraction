@@ -485,7 +485,7 @@ public class CausalExtraction {
 			try {
 				Morph lastMorph = caboList.get(chunkId).morph.get(caboList.get(chunkId).morph.size() - 1);
 				Morph firstMorph = caboList.get(chunkId).morph.get(0);
-				if (lastMorph.pos.equals("動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
+				if (lastMorph.pos.equals("動詞") || lastMorph.pos.equals("助動詞") || lastMorph.face.endsWith("。") || lastMorph.face.endsWith("、")) {
 					causal.result = this.getResultVP(caboList, clue, coreId);
 					causal.subj = this.getSubj(caboList, coreId);
 				} else if (firstMorph.posd.equals("非自立")) {

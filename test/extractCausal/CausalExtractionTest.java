@@ -354,6 +354,18 @@ public class CausalExtractionTest {
 		assertThat(seikai.result, is(causal.result));
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
+
+		// 基点文節の末尾が助動詞の場合
+		CausalExtraction.patternFlag = false;
+		clue = "により、";
+		sentence = "ガーデンセンターでは、猛暑の影響により、屋外植物の販売が苦戦したものの、屋内の観葉植物やインテリア、インターネット販売が好調に推移した結果、売上高は前年同期比増収となりました。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, this.ce.getCoreIds(caboList, clue)[0], sentence, "TTT");
+		seikai = new Causal("猛暑の影響", "屋外植物の販売が苦戦した", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
 	}
 
 	@Test
@@ -382,7 +394,7 @@ public class CausalExtractionTest {
 
 		CausalExtraction.svmFlag = false;
 		causalList = this.ce.getInga("sample/tanshin2010.txt");
-		assertThat(69, is(causalList.size()));
+		assertThat(70, is(causalList.size()));
 	}
 
 }
