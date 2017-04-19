@@ -1,0 +1,6 @@
+1	sample/test1.txt::1
+0	sample/test1.txt::2
+1	sample/test1.txt::4
+1	sample/test2.txt::2
+0	sample/test2.txt::5
+1	sample/test2.txt::4

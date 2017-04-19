@@ -19,7 +19,7 @@ public class CausalExtractionTest {
 	String[] demonList = FileUtilities.readLines("sample/demonstrative_list.txt");
 	ArrayList<String[]> clueList = FileUtilities.readClueList("sample/clue_list.txt");
 	ArrayList<String[]> additionalData = FileUtilities.readAdditionalData("sample/additional_data.txt");
-	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("sample/svm_result.txt");
+	HashMap<String, Integer> svmHash = FileUtilities.readSvmResults("test/sampleData/svm_result4test.txt");
 
 	CausalExtraction ce = new CausalExtraction(clueList, demonList);
 	CabochaParser parser = new CabochaParser();
