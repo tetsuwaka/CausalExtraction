@@ -623,10 +623,13 @@ public class CausalExtraction {
 	 * @param addList 新たな手がかり表現の配列
 	 */
 	public static void addClueList(String[] addList) {
-		String[] temp = new String[CausalExtraction.clueList.length + addList.length];
-		System.arraycopy(CausalExtraction.clueList, 0, temp, 0, CausalExtraction.clueList.length);
-		System.arraycopy(addList, 0, temp, CausalExtraction.clueList.length, addList.length);
-		CausalExtraction.clueList = temp;	
+		ArrayList<String> temp = new ArrayList<String>(Arrays.asList(CausalExtraction.clueList));
+		for (int i = 0; i < addList.length; i++) {
+			if (!temp.contains(addList[i])) {
+				temp.add(addList[i]);
+			}
+		}
+		CausalExtraction.clueList = (String[])temp.toArray(new String[temp.size()]);
 	}
 
 	/**

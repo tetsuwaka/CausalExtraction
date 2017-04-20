@@ -78,6 +78,10 @@ public class CausalExtractionTest {
 		str = StringUtilities.join("\n", ExecCabocha.exec("円高のため、不況になったため、損した。"));
 		caboList = parser.parse(str);
 		assertThat(new Integer[]{1, 4}, is(this.ce.getCoreIds(caboList, "ため、")));
+
+		str = StringUtilities.join("\n", ExecCabocha.exec("公共工事と住宅建設が高水準を維持、個人消費も堅調なうえ、設備投資が前年度を上回る見通しとなっているためだ。"));
+		caboList = parser.parse(str);
+		assertThat(new Integer[]{12}, is(this.ce.getCoreIds(caboList, "ためだ。")));
 	}
 
 	@Test
@@ -370,10 +374,11 @@ public class CausalExtractionTest {
 
 	@Test
 	public void testGetInga() throws Exception {
-		ArrayList<Causal> causalList = this.ce.getInga("sample/test00.txt");
-		assertThat(causalList.size(), is(0));
+		//ArrayList<Causal> causalList = this.ce.getInga("sample/test00.txt");
+		//assertThat(causalList.size(), is(0));
 
-		causalList = this.ce.getInga("sample/test1.txt");
+		CausalExtraction.svmFlag = false;
+		ArrayList<Causal> causalList = this.ce.getInga("sample/test1.txt");
 		assertThat(3, is(causalList.size()));
 		Causal seikai = new Causal("製菓・製パン向けの販売が総じて低調に推移した", "各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。", "製菓原材料類は、", "B");
 		assertThat(seikai.basis, is(causalList.get(0).basis));
