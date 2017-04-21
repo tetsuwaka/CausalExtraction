@@ -360,7 +360,7 @@ public class CausalExtraction {
 			word = tempWord + word;
 			
 			// 操作終了条件：核文節に係っていて、条件を満たした場合
-			if (pos.chunk == coreId && clue.endsWith("。") && pos.id != coreId - 1) {
+			if (pos.morph.size() > 1 && pos.chunk == coreId && clue.endsWith("。") && pos.id != coreId - 1) {
 				if (pos.morph.get(pos.morph.size() - 1).posd.equals("接続助詞") || 
 					pos.morph.get(pos.morph.size() - 2).posd.equals("接続助詞") ||
 					pos.morph.get(pos.morph.size() - 1).posd.equals("係助詞") || 
