@@ -76,3 +76,4 @@ SOFTWARE.
 The following people found bugs of this program.
 Thank you very much.
 * 佐藤史仁 (日興リサーチセンター株式会社) 様
+* 田中良典 (日興リサーチセンター株式会社) 様
