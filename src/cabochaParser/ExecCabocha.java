@@ -22,7 +22,7 @@ public class ExecCabocha {
 		List<String> list = new ArrayList<String>();
 		list.add("/bin/bash");
 		list.add("-c");
-		list.add("echo " + sentence + " | /usr/local/bin/cabocha -f1");
+		list.add("echo " + sentence + " | cabocha -f1");
 
 		ProcessBuilder pb = new ProcessBuilder(list);
 		Process p = pb.start();

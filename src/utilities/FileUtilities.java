@@ -19,6 +19,7 @@ public class FileUtilities {
 			String str = br.readLine();
 			while (str != null) {
 				if (str.equals("")) {
+					str = br.readLine();
 					continue;
 				}
 				strings.add(str);
