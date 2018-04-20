@@ -232,6 +232,16 @@ public class CausalExtractionTest {
 		assertThat(seikai.subj, is(causal.subj));
 		assertThat(seikai.pattern, is(causal.pattern));
 
+		clue = "で、";
+		sentence = "円高による不況の影響で、買い物客が激減。";
+		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
+		causal = this.ce.getCausalExpression(caboList, clue, 2, sentence, "");
+		seikai = new Causal("円高による不況の影響", "買い物客が激減。", "", "A");
+		assertThat(seikai.basis, is(causal.basis));
+		assertThat(seikai.result, is(causal.result));
+		assertThat(seikai.subj, is(causal.subj));
+		assertThat(seikai.pattern, is(causal.pattern));
+
 		clue = "による";
 		sentence = "この結果による不況の影響で、買い物客が激減。";
 		caboList = parser.parse(StringUtilities.join("\n", ExecCabocha.exec(sentence)));
