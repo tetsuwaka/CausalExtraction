@@ -246,7 +246,7 @@ public class CausalExtraction {
 				break;
 			}
 
-			if (passiveHash.containsKey(pos.id)) {
+			if (passiveHash.containsKey(pos.chunk)) {
 				int passive = 999;
 				for (int p : passiveHash.get(pos.chunk)) {
 					passive = p < passive ? p : passive;
