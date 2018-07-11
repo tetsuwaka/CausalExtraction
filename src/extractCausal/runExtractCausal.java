@@ -17,7 +17,6 @@ import utilities.FileUtilities;
 
 public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	private String fileName;
-	static boolean flag = false;
 	private static int threadNum = 2;
 	private static boolean patternFlag = false;
 	private static String patternFilePath;
@@ -33,23 +32,7 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		CausalExtraction ce = new CausalExtraction();
 		return ce.getInga(this.fileName);
 	}
-	
-	/**
-	 * JSON形式の出力を行う(同期的に)
-	 * @param causalList カボリスト
-	 */
-	public static synchronized void printJson(ArrayList<Causal> causalList) {
-		for (Causal causal : causalList) {
-			if (!flag) {
-				System.out.print(causal.toJson());
-				flag = true;
-			} else {
-				System.out.println(",");
-				System.out.print(causal.toJson());
-			}
-		}
-	}
-	
+
 	/**
 	 * コマンドライン引数を処理して、変数をセットする
 	 * @param args コマンドライン引数
@@ -121,15 +104,16 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		for (int i = 0; i < files.length; i++) {
 			completion.submit(new runExtractCausal(files[i]));
 		}
-		
+
 		ex.shutdown();
 
-		System.out.println("[");
 		for (int i = 0; i < files.length; i++) {
 			try {
 				Future<ArrayList<Causal>> future = completion.take();
 				ArrayList<Causal> causalList = future.get();
-				runExtractCausal.printJson(causalList);
+				for (Causal causal : causalList) {
+					System.out.println(causal.toJson());
+				}
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 				continue;
@@ -137,8 +121,6 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 				continue;
 			}
 		}
-		System.out.println();
-		System.out.println("]");
 	}
 
 }
