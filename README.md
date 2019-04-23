@@ -37,9 +37,9 @@ Then, run the following command.
 ## Results
 CausalExtraction program outputs a following json.
 
-`[
+`
 {"clue": "で、", "basis": "円高による不況の影響", "result": "買い物客が激減。", "subj": "", "pattern": "A", "filePath": "test1.txt", "line": 2}
-]`
+`
 
 # LICENSE
 ```text
