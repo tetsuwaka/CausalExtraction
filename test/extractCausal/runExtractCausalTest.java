@@ -41,11 +41,14 @@ public class runExtractCausalTest {
         String ls = System.getProperty("line.separator");
 
         // 結果を出力
-        runExtractCausal.printJson(causalList);
+        for (Causal causal : causalList) {
+            System.out.println(causal.toJson());
+        }
 
-        String result = "{\"clue\": \"から、\", \"basis\": \"製菓・製パン向けの販売が総じて低調に推移した\", \"result\": \"各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。\", \"subj\": \"製菓原材料類は、\", \"pattern\": \"B\", \"filePath\": \"sample/test1.txt\", \"line\": 1}," +
+        String result = "{\"clue\": \"から、\", \"basis\": \"製菓・製パン向けの販売が総じて低調に推移した\", \"result\": \"各種の製菓用食材や糖置換フルーツ、栗製品やその他の仕入商品が販売減となりました。\", \"subj\": \"製菓原材料類は、\", \"pattern\": \"B\", \"filePath\": \"sample/test1.txt\", \"line\": 1}" +
                         ls +
-                        "{\"clue\": \"ため。\", \"basis\": \"前期末の有価証券評価差額金が十七億円強の含み損となった\", \"result\": \"配当原資が不足するのは、\", \"subj\": \"\", \"pattern\": \"C\", \"filePath\": \"sample/test1.txt\", \"line\": 4}";
+                        "{\"clue\": \"ため。\", \"basis\": \"前期末の有価証券評価差額金が十七億円強の含み損となった\", \"result\": \"配当原資が不足するのは、\", \"subj\": \"\", \"pattern\": \"C\", \"filePath\": \"sample/test1.txt\", \"line\": 4}" +
+                        ls;
         assertThat(outContent.toString(), is(result));
     }
 }
