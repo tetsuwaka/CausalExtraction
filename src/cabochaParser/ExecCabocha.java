@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ExecCabocha {
 
@@ -26,7 +27,7 @@ public class ExecCabocha {
 
 		ProcessBuilder pb = new ProcessBuilder(list);
 		Process p = pb.start();
-		p.waitFor();
+		p.waitFor(1, TimeUnit.SECONDS);
 
 		ArrayList<String> results = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
