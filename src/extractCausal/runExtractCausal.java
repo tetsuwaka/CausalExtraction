@@ -101,26 +101,42 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		String[] files = FileUtilities.readLines(filePath);
 		ExecutorService ex = Executors.newFixedThreadPool(threadNum);
 		CompletionService<ArrayList<Causal>> completion = new ExecutorCompletionService<ArrayList<Causal>>(ex);
+
+		// タスクの投入
 		for (int i = 0; i < files.length; i++) {
 			completion.submit(new runExtractCausal(files[i]));
 		}
 
+		// 新たなタスクの受付を停止
 		ex.shutdown();
 
-		for (int i = 0; i < files.length; i++) {
+		// 結果の収集
+		int completedTasks = 0;
+		while (completedTasks < files.length) {
 			try {
 				Future<ArrayList<Causal>> future = completion.take();
 				ArrayList<Causal> causalList = future.get();
 				for (Causal causal : causalList) {
 					System.out.println(causal.toJson());
 				}
+				completedTasks++;
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				continue;
+				System.err.println("処理が中断されました");
+				break;
 			} catch (ExecutionException e) {
-				continue;
+				System.err.println("タスク実行中にエラーが発生しました: " + e.getCause());
+				completedTasks++;
 			}
 		}
-	}
 
+		// 全タスクの完了を待機
+		try {
+			if (!ex.awaitTermination(60, TimeUnit.SECONDS)) {
+				ex.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			ex.shutdownNow();
+		}
+	}
 }
