@@ -21,7 +21,7 @@ A jar file(extractCausal.jar) is made in the sample folder.
 You move to the sample folder.
 Then, run the following command.
 
-`$ java -Dfile.encoding=UTF-8 -Xmx2G -Xmx8G -jar extractCausal.jar test_list.txt`
+`$ java -Dfile.encoding=UTF-8 -Xms2G -Xmx8G -jar extractCausal.jar test_list.txt`
 
 ## Argments
 * File list for extracting causal expressions
@@ -32,7 +32,7 @@ Then, run the following command.
 * -t, --thredNum <arg>   Thread Number
 
 ### Example 2
-`$ java -Dfile.encoding=UTF-8 -Xmx2G -Xmx8G -jar extractCausal.jar -t 4 -s svm_result.txt -p additional_data.txt test_list.txt`
+`$ java -Dfile.encoding=UTF-8 -Xms2G -Xmx8G -jar extractCausal.jar -t 4 -s svm_result.txt -p additional_data.txt test_list.txt`
 
 ## Results
 CausalExtraction program outputs a following json.
