@@ -13,17 +13,21 @@ public class StringUtilities {
 	 * @return 配列の要素を区切り文字でつなげた文字列
 	 */
 	public static String join(String delimiter, List<String> list) {
-		String line = "";
-		int i = 0;
-		for (String s : list) {
-			if (i == 0) {
-				line += s;
-				i++;
-			} else {
-				line += delimiter + s;
-			}
+		if (list == null || list.isEmpty()) {
+			return "";
 		}
-		return line;
+		
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String s : list) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append(delimiter);
+			}
+			sb.append(s);
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -33,11 +37,10 @@ public class StringUtilities {
 	 * @return 文字列str2に文字列str1が含まれていればtrue, いなければfalse
 	 */
 	public static boolean in(String str1, String str2) {
-		if (str2.indexOf(str1) != -1) {
-			return true;
-		} else {
+		if (str1 == null || str2 == null) {
 			return false;
 		}
+		return str2.contains(str1);
 	}
 	
 	/**
@@ -47,8 +50,16 @@ public class StringUtilities {
 	 * @return removeStrを削除した文字列str
 	 */
 	public static String remove(String str, String removeStr) {
-		Pattern pattern = Pattern.compile(removeStr);
-		Matcher m = pattern.matcher(str);
-		return m.find() ? m.replaceAll("") : str;
+		if (str == null || removeStr == null) {
+			return str;
+		}
+		try {
+			Pattern pattern = Pattern.compile(removeStr);
+			Matcher m = pattern.matcher(str);
+			return m.find() ? m.replaceAll("") : str;
+		} catch (Exception e) {
+			// If regex compilation fails, fall back to simple string replacement
+			return str.replace(removeStr, "");
+		}
 	}
 }

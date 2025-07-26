@@ -13,27 +13,21 @@ public class FileUtilities {
 	 */
 	static public String[] readLines(String filePath) {
 		ArrayList<String> strings = new ArrayList<String>();
-		try {
-			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str = br.readLine();
-			while (str != null) {
-				if (str.equals("")) {
-					str = br.readLine();
-					continue;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			String str;
+			while ((str = br.readLine()) != null) {
+				if (!str.trim().isEmpty()) {
+					strings.add(str);
 				}
-				strings.add(str);
-				str = br.readLine();
 			}
-			br.close();
 		} catch (FileNotFoundException e) {
-			System.err.println(e);
+			System.err.println("File not found: " + filePath + " - " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error reading file: " + filePath + " - " + e.getMessage());
 		}
 
 		// ArrayListからString[]に変換してから、返す
-		return (String[])strings.toArray(new String[strings.size()]);
+		return strings.toArray(new String[strings.size()]);
 	}
 
 	/**
@@ -43,31 +37,28 @@ public class FileUtilities {
 	static public ArrayList<String[]> readClueList(String filePath) {
 		ArrayList<String> strings = new ArrayList<String>();
 		ArrayList<String> endClues = new ArrayList<String>();
-		try {
-			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str = br.readLine();
-			while (str != null) {
-				if (str.equals("")) {
-					continue;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			String str;
+			while ((str = br.readLine()) != null) {
+				if (!str.trim().isEmpty()) {
+					String[] temp = str.split("]");
+					if (temp.length >= 2) {
+						strings.add(temp[1]);
+						if (str.startsWith("[E]")) {
+							endClues.add(temp[1]);
+						}
+					}
 				}
-				String[] temp = str.split("]");
-				strings.add(temp[1]);
-				if (str.startsWith("[E]")) {
-					endClues.add(temp[1]);
-				}
-				str = br.readLine();
 			}
-			br.close();
 		} catch (FileNotFoundException e) {
-			System.err.println(e);
+			System.err.println("Clue list file not found: " + filePath + " - " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error reading clue list file: " + filePath + " - " + e.getMessage());
 		}
 
 		// ArrayListからString[]に変換してから、返す
-		String[] clues = (String[])strings.toArray(new String[strings.size()]);
-		String[] eclues = (String[])endClues.toArray(new String[endClues.size()]);
+		String[] clues = strings.toArray(new String[strings.size()]);
+		String[] eclues = endClues.toArray(new String[endClues.size()]);
 		ArrayList<String[]> result = new ArrayList<String[]>(2);
 		result.add(clues);
 		result.add(eclues);
@@ -81,32 +72,29 @@ public class FileUtilities {
 	static public ArrayList<String[]> readAdditionalData(String filePath) {
 		ArrayList<String> clues = new ArrayList<String>();
 		ArrayList<String> patterns = new ArrayList<String>();
-		try {
-			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str = br.readLine();
-			while (str != null) {
-				if (str.equals("")) {
-					continue;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			String str;
+			while ((str = br.readLine()) != null) {
+				if (!str.trim().isEmpty()) {
+					String[] temp = str.split("]");
+					if (temp.length >= 2) {
+						if (str.startsWith("[clue]")) {
+							clues.add(temp[1]);
+						} else if (str.startsWith("[pattern]")) {
+							patterns.add(temp[1]);
+						}
+					}
 				}
-				String[] temp = str.split("]");
-				if (str.startsWith("[clue]")) {
-					clues.add(temp[1]);
-				} else if (str.startsWith("[pattern]")) {
-					patterns.add(temp[1]);
-				}
-				str = br.readLine();
 			}
-			br.close();
 		} catch (FileNotFoundException e) {
-			System.err.println(e);
+			System.err.println("Additional data file not found: " + filePath + " - " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error reading additional data file: " + filePath + " - " + e.getMessage());
 		}
 
 		// ArrayListからString[]に変換してから、返す
-		String[] clueList = (String[])clues.toArray(new String[clues.size()]);
-		String[] patternList = (String[])patterns.toArray(new String[patterns.size()]);
+		String[] clueList = clues.toArray(new String[clues.size()]);
+		String[] patternList = patterns.toArray(new String[patterns.size()]);
 		ArrayList<String[]> result = new ArrayList<String[]>(2);
 		result.add(clueList);
 		result.add(patternList);
@@ -121,23 +109,24 @@ public class FileUtilities {
 	 */
 	static public HashMap<String, Integer> readSvmResults(String filePath) {
 		HashMap<String, Integer> svmHash = new HashMap<String, Integer>();
-		try {
-			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str = br.readLine();
-			while (str != null) {
-				if (str.equals("")) {
-					continue;
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			String str;
+			while ((str = br.readLine()) != null) {
+				if (!str.trim().isEmpty()) {
+					String[] temp = str.split("\t");
+					if (temp.length >= 2) {
+						try {
+							svmHash.put(temp[1], Integer.parseInt(temp[0]));
+						} catch (NumberFormatException e) {
+							System.err.println("Invalid SVM result format in line: " + str);
+						}
+					}
 				}
-				String[] temp = str.split("\t");
-				svmHash.put(temp[1], Integer.parseInt(temp[0]));
-				str = br.readLine();
 			}
-			br.close();
 		} catch (FileNotFoundException e) {
-			System.err.println(e);
+			System.err.println("SVM results file not found: " + filePath + " - " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error reading SVM results file: " + filePath + " - " + e.getMessage());
 		}
 
 		return svmHash;

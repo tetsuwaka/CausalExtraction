@@ -12,12 +12,22 @@ import java.util.concurrent.TimeUnit;
 
 public class ExecCabocha {
 
-	public static ArrayList<String> exec(String sentence)  throws IOException, InterruptedException {
+	public static ArrayList<String> exec(String sentence) throws IOException, InterruptedException {
+		// Input validation to prevent command injection
+		if (sentence == null || sentence.trim().isEmpty()) {
+			throw new IllegalArgumentException("Sentence cannot be null or empty");
+		}
+		
+		// Basic sanitization - remove potentially dangerous characters
+		sentence = sentence.replaceAll("[;&|`$]", "");
+		
 		String OS_NAME = System.getProperty("os.name").toLowerCase();
 		return OS_NAME.startsWith("windows") ? exec4windows(sentence) : execNormal(sentence);
 	}
 
-	public static ArrayList<String> execNormal(String sentence) throws IOException, InterruptedException{
+	public static ArrayList<String> execNormal(String sentence) throws IOException, InterruptedException {
+		// Escape the sentence properly to prevent command injection
+		sentence = sentence.replace("\"", "\\\"").replace("'", "\\'");
 		sentence = "\"" + sentence + "\"";
 
 		List<String> list = new ArrayList<String>();
@@ -27,11 +37,18 @@ public class ExecCabocha {
 
 		ProcessBuilder pb = new ProcessBuilder(list);
 		Process p = pb.start();
-		p.waitFor(1, TimeUnit.SECONDS);
+		
+		// Set a reasonable timeout and handle it properly
+		boolean finished = p.waitFor(5, TimeUnit.SECONDS);
+		if (!finished) {
+			p.destroyForcibly();
+			throw new InterruptedException("CaboCha process timed out after 5 seconds");
+		}
 
 		ArrayList<String> results = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-			for(String line = br.readLine(); line != null; line = br.readLine()) {
+			String line;
+			while ((line = br.readLine()) != null) {
 				results.add(line);
 			}
 		}
@@ -46,15 +63,23 @@ public class ExecCabocha {
 		Process process = pb.start();
 
 		//実行途中で文字列を入力(コマンドプロンプトで文字を入力する操作)
-		OutputStreamWriter osw = new OutputStreamWriter(process.getOutputStream(), "UTF-8");
-		osw.write(sentence);
-		osw.close();
+		try (OutputStreamWriter osw = new OutputStreamWriter(process.getOutputStream(), "UTF-8")) {
+			osw.write(sentence);
+			osw.flush();
+		}
+
+		// Set a reasonable timeout
+		boolean finished = process.waitFor(5, TimeUnit.SECONDS);
+		if (!finished) {
+			process.destroyForcibly();
+			throw new InterruptedException("CaboCha process timed out after 5 seconds");
+		}
 
 		//出力結果を読み込む
-		InputStream is = process.getInputStream();
 		ArrayList<String> results = new ArrayList<String>();
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-			for (String line = br.readLine(); line != null; line = br.readLine()) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+			String line;
+			while ((line = br.readLine()) != null) {
 				results.add(line);
 			}
 		}
