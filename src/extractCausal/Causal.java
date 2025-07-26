@@ -24,16 +24,62 @@ public class Causal {
 	}
 	
 	public String toJson() {
-		String json = "{";
-		json += "\"clue\": " + "\"" + this.clue + "\", ";
-		json += "\"basis\": " + "\"" + this.basis + "\", ";
-		json += "\"result\": " + "\"" + this.result + "\", ";
-		json += "\"subj\": " + "\"" + this.subj + "\", ";
-		json += "\"pattern\": " + "\"" + this.pattern + "\", ";
-		json += "\"filePath\": " + "\"" + this.filePath + "\", ";
-		json += "\"line\": " + this.line;
-		json += "}";
-		return json;
+		StringBuilder json = new StringBuilder("{");
+		json.append("\"clue\": ").append(escapeJsonString(this.clue)).append(", ");
+		json.append("\"basis\": ").append(escapeJsonString(this.basis)).append(", ");
+		json.append("\"result\": ").append(escapeJsonString(this.result)).append(", ");
+		json.append("\"subj\": ").append(escapeJsonString(this.subj)).append(", ");
+		json.append("\"pattern\": ").append(escapeJsonString(this.pattern)).append(", ");
+		json.append("\"filePath\": ").append(escapeJsonString(this.filePath)).append(", ");
+		json.append("\"line\": ").append(this.line);
+		json.append("}");
+		return json.toString();
+	}
+	
+	/**
+	 * Escape special characters in JSON strings to prevent malformed JSON
+	 * @param str input string
+	 * @return escaped JSON string
+	 */
+	private String escapeJsonString(String str) {
+		if (str == null) {
+			return "null";
+		}
+		StringBuilder escaped = new StringBuilder("\"");
+		for (char c : str.toCharArray()) {
+			switch (c) {
+				case '"':
+					escaped.append("\\\"");
+					break;
+				case '\\':
+					escaped.append("\\\\");
+					break;
+				case '\b':
+					escaped.append("\\b");
+					break;
+				case '\f':
+					escaped.append("\\f");
+					break;
+				case '\n':
+					escaped.append("\\n");
+					break;
+				case '\r':
+					escaped.append("\\r");
+					break;
+				case '\t':
+					escaped.append("\\t");
+					break;
+				default:
+					if (c < 0x20) {
+						escaped.append(String.format("\\u%04x", (int) c));
+					} else {
+						escaped.append(c);
+					}
+					break;
+			}
+		}
+		escaped.append("\"");
+		return escaped.toString();
 	}
 
 }

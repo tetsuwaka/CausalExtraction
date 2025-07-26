@@ -18,25 +18,25 @@ public class CausalExtraction {
 	private CabochaParser parser = new CabochaParser();
 	
 	// 手がかり表現のリスト
-	static private String[] clueList;
+	static private volatile String[] clueList;
 
 	// Pattern Eの手がかり表現のリスト
-	static private String[] eclueList;
+	static private volatile String[] eclueList;
 
 	// 指示詞のリスト
-	static private String[] demonList;
+	static private volatile String[] demonList;
 	
 	// PrefixPatternのリスト
-	static private String[] prefixPatternList;
+	static private volatile String[] prefixPatternList;
 	
 	// PrefixPatternを適用するか否かのフラグ
-	static public boolean patternFlag = false;
+	static public volatile boolean patternFlag = false;
 	
 	// SVMの結果を利用するハッシュ
-	static private HashMap<String, Integer> svmHash;
+	static private volatile HashMap<String, Integer> svmHash;
 	
 	// SVMの結果を適用するか否かのフラグ
-	static public boolean svmFlag = false;
+	static public volatile boolean svmFlag = false;
 
 	// 手がかり表現かぶり判定HashMap
 	public HashMap<String, ArrayList<String>> clueHash;
@@ -603,7 +603,7 @@ public class CausalExtraction {
 	 * PrefixPatternと追加手がかり表現を使用するようにセットする
 	 * @param datum PrefixPatternと追加手がかり表現のリスト
 	 */
-	public static void setAdditionalData(ArrayList<String[]> datum) {
+	public static synchronized void setAdditionalData(ArrayList<String[]> datum) {
 		CausalExtraction.addClueList(datum.get(0));
 		CausalExtraction.setPrefixPatternList(datum.get(1));
 		CausalExtraction.patternFlag = true;
@@ -613,7 +613,7 @@ public class CausalExtraction {
 	 * clueListとeclueListのセッター
 	 * @param clueList clueListとeclueListの入ったArrayList
 	 */
-	public static void setClueList(ArrayList<String[]> clueList) {
+	public static synchronized void setClueList(ArrayList<String[]> clueList) {
 		CausalExtraction.clueList = clueList.get(0);
 		CausalExtraction.eclueList = clueList.get(1);
 	}
@@ -622,21 +622,21 @@ public class CausalExtraction {
 	 * clueListに新たな手がかり表現の配列を加える
 	 * @param addList 新たな手がかり表現の配列
 	 */
-	public static void addClueList(String[] addList) {
+	public static synchronized void addClueList(String[] addList) {
 		ArrayList<String> temp = new ArrayList<String>(Arrays.asList(CausalExtraction.clueList));
 		for (int i = 0; i < addList.length; i++) {
 			if (!temp.contains(addList[i])) {
 				temp.add(addList[i]);
 			}
 		}
-		CausalExtraction.clueList = (String[])temp.toArray(new String[temp.size()]);
+		CausalExtraction.clueList = temp.toArray(new String[temp.size()]);
 	}
 
 	/**
 	 * demonListのセッター
 	 * @param demonList 指示詞の配列
 	 */
-	public static void setDemonList(String[] demonList) {
+	public static synchronized void setDemonList(String[] demonList) {
 		CausalExtraction.demonList = demonList;
 	}
 	
@@ -644,7 +644,7 @@ public class CausalExtraction {
 	 * PrefixPatternのセッター
 	 * @param prefixPatternList PrefixPatternの配列
 	 */
-	public static void setPrefixPatternList(String[] prefixPatternList) {
+	public static synchronized void setPrefixPatternList(String[] prefixPatternList) {
 		CausalExtraction.prefixPatternList = prefixPatternList;
 	}
 	
@@ -652,7 +652,7 @@ public class CausalExtraction {
 	 * svmHashのセッター
 	 * @param svmHash svmの結果のハッシュ
 	 */
-	public static void setSvmHash(HashMap<String, Integer> svmHash) {
+	public static synchronized void setSvmHash(HashMap<String, Integer> svmHash) {
 		CausalExtraction.svmHash = svmHash;
 	}
 	

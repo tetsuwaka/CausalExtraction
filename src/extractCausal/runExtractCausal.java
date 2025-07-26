@@ -54,33 +54,53 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 				try {
 					threadNum = Integer.parseInt(cl.getOptionValue("t"));
 				} catch (NumberFormatException e) {
+					System.err.println("Error: Thread number must be a valid integer");
 					help.printHelp("extractCausal [options] [file]", opts);
 					System.exit(1);
 				}
 				if (threadNum <= 0) {
+					System.err.println("Error: Thread number must be positive");
 					help.printHelp("extractCausal [options] [file]", opts);
 					System.exit(1);
 				}
 			}
 			if (cl.hasOption("h")) {
 				help.printHelp("extractCausal [options] [file]", opts);
-				System.exit(1);
+				System.exit(0);
 			}
 			if (cl.hasOption("s")) {
-				CausalExtraction.setSvmHash(FileUtilities.readSvmResults(cl.getOptionValue("s")));
+				String svmFile = cl.getOptionValue("s");
+				if (svmFile == null || svmFile.trim().isEmpty()) {
+					System.err.println("Error: SVM file path cannot be empty");
+					help.printHelp("extractCausal [options] [file]", opts);
+					System.exit(1);
+				}
+				CausalExtraction.setSvmHash(FileUtilities.readSvmResults(svmFile));
 				CausalExtraction.svmFlag = true;
 			}
 			if (cl.hasOption("p")) {
 				patternFilePath = cl.getOptionValue("p");
+				if (patternFilePath == null || patternFilePath.trim().isEmpty()) {
+					System.err.println("Error: Pattern file path cannot be empty");
+					help.printHelp("extractCausal [options] [file]", opts);
+					System.exit(1);
+				}
 				patternFlag = true;
 			}
 			
 			if (cl.getArgs().length != 1) {
+				System.err.println("Error: Exactly one input file must be specified");
 				help.printHelp("extractCausal [options] [file]", opts);
 				System.exit(1);
 			}
 			filePath = cl.getArgs()[0];
+			if (filePath == null || filePath.trim().isEmpty()) {
+				System.err.println("Error: Input file path cannot be empty");
+				help.printHelp("extractCausal [options] [file]", opts);
+				System.exit(1);
+			}
 		} catch (ParseException e1) {
+			System.err.println("Error parsing command line arguments: " + e1.getMessage());
 			help.printHelp("extractCausal [options] [file]", opts);
 			System.exit(1);
 		}
