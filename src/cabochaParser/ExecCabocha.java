@@ -64,6 +64,27 @@ public class ExecCabocha {
 	}
 
 	/**
+	 * cabocha が起動できて解析結果を返すかを確認する。
+	 * 見つからない・動かない場合は IOException を投げる。処理開始前に呼ぶこと。
+	 */
+	public static void checkAvailable() throws IOException {
+		CabochaProcess proc;
+		try {
+			proc = new CabochaProcess();
+		} catch (IOException e) {
+			throw new IOException("cabocha を起動できません: " + CABOCHA_PATH
+					+ " (PATH を確認するか -Dcabocha.path=<cabochaのパス> を指定してください)", e);
+		}
+		try {
+			proc.analyze("テスト");
+		} catch (IOException e) {
+			throw new IOException("cabocha が正常に動作しません: " + CABOCHA_PATH, e);
+		} finally {
+			proc.destroy();
+		}
+	}
+
+	/**
 	 * 起動中のすべての cabocha プロセスを終了する。
 	 * 全処理完了後に呼ぶこと。JVM 終了時にも自動で呼ばれる。
 	 */

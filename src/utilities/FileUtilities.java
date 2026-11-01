@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,7 +16,7 @@ public class FileUtilities {
 		ArrayList<String> strings = new ArrayList<String>();
 		try {
 			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 			String str = br.readLine();
 			while (str != null) {
 				if (str.equals("")) {
@@ -45,7 +46,7 @@ public class FileUtilities {
 		ArrayList<String> endClues = new ArrayList<String>();
 		try {
 			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 			String str = br.readLine();
 			while (str != null) {
 				if (str.equals("")) {
@@ -83,7 +84,7 @@ public class FileUtilities {
 		ArrayList<String> patterns = new ArrayList<String>();
 		try {
 			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 			String str = br.readLine();
 			while (str != null) {
 				if (str.equals("")) {
@@ -123,7 +124,7 @@ public class FileUtilities {
 		HashMap<String, Integer> svmHash = new HashMap<String, Integer>();
 		try {
 			File file = new File(filePath);
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 			String str = br.readLine();
 			while (str != null) {
 				if (str.equals("")) {

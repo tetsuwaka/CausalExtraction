@@ -1,6 +1,12 @@
 package extractCausal;
 
 import cabochaParser.ExecCabocha;
+import java.io.BufferedOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -88,8 +94,27 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 	}
 	
 	public static void main(String[] args) {
+		// 標準出力・標準エラーを UTF-8 に固定する（ロケールや -Dstdout.encoding に依存しないようにする）
+		try {
+			System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(FileDescriptor.out), 1 << 16), false, "UTF-8"));
+			System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err), true, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e); // UTF-8 は必ずサポートされる
+		}
+
 		// コマンドライン引数の処理
 		setArgs(args);
+
+		// cabocha が使えなければ即終了
+		try {
+			ExecCabocha.checkAvailable();
+		} catch (IOException e) {
+			System.err.println("エラー: " + e.getMessage());
+			if (e.getCause() != null) {
+				System.err.println("  原因: " + e.getCause());
+			}
+			System.exit(1);
+		}
 		
 		// 手がかり表現と指示詞リストの読み込み
 		CausalExtraction.setDemonList(FileUtilities.readLines("demonstrative_list.txt"));
@@ -143,5 +168,6 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 
 		// 常駐させていた cabocha プロセスを終了
 		ExecCabocha.shutdown();
+		System.out.flush();
 	}
 }
