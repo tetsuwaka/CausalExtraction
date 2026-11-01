@@ -1,5 +1,6 @@
 package extractCausal;
 
+import cabochaParser.ExecCabocha;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -139,5 +140,8 @@ public class runExtractCausal implements Callable<ArrayList<Causal>> {
 		} catch (InterruptedException e) {
 			ex.shutdownNow();
 		}
+
+		// 常駐させていた cabocha プロセスを終了
+		ExecCabocha.shutdown();
 	}
 }
